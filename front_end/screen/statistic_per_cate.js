@@ -31,26 +31,43 @@ class Statistic_per_cate extends Component{
               },
             screenHeight: Dimensions.get("window").height,
             screenWidth: Dimensions.get("window").width,
-            data: []
+            data: [],
+            data_income: []
         }
     }
     
     render(){
         return(
             <Container>
-                <View>
+                <View style = {{margin: 10, borderRadius: 20, backgroundColor: '#23596e'}}>
                     <PieChart 
                         data = {this.state.data}
-                        width={this.state.screenWidth}
-                        height={this.state.screenHeight * 0.4}
+                        width={this.state.screenWidth*0.95}
+                        height={this.state.screenHeight * 0.3}
                         chartConfig={this.state.chartConfig}
                         accessor={"value"}
                         backgroundColor={"transparent"}
                         paddingLeft={"15"}
-                        center={[10, 50]}
+                        paddingBottom = {"30"}
+                        center={[0, 0]}
                         absolute
+                        borderRadius = {20}
                     />
                     
+                </View>
+                <View style = {{margin: 10, borderRadius: 20, backgroundColor: '#23596e'}}>
+                <PieChart 
+                        data = {this.state.data_income}
+                        width={this.state.screenWidth*0.95}
+                        height={this.state.screenHeight * 0.3}
+                        chartConfig={this.state.chartConfig}
+                        accessor={"value"}
+                        backgroundColor={"transparent"}
+                        paddingLeft={"15"}
+                        paddingBottom = {"30"}
+                        center={[0, 0]}
+                        absolute
+                    />
                 </View>
             </Container>
         )
@@ -59,14 +76,24 @@ class Statistic_per_cate extends Component{
     async componentDidMount(){
         let res = await fetch('http://10.0.2.2:5000/spending/per/cate');
         let spending_cate = await res.json();
+        
+        let res2 = await fetch('http://10.0.2.2:5000/income/per/cate');
+        let income_cate = await res2.json();
+        console.log(income_cate);
+        for (let i = 0; i<income_cate.length; i++){
+            income_cate[i]["color"] = this.state.color[i];
+            income_cate[i]["legendFontColor"] = "#000000";
+            income_cate[i]["legendFontSize"] = 15;
+        }
         console.log(spending_cate);
         for (let i = 0; i< spending_cate.length; i++){
             spending_cate[i]["color"] = this.state.color[i];
-            spending_cate[i]["legendFontColor"] = this.state.color[i];
+            spending_cate[i]["legendFontColor"] = "#000000";
             spending_cate[i]["legendFontSize"] = 15;
         }
         this.setState({
-            data: spending_cate
+            data: spending_cate,
+            data_income: income_cate
         })
     }
 }

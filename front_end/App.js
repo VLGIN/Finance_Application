@@ -3,12 +3,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {createDrawerNavigator} from '@react-navigation/drawer'
 import Home from './screen/Home';
+import Plan from './screen/Plan';
 import Category from './screen/Category';
 import AccountSetting from './screen/AccountSetting';
 import Iconicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import History from './screen/History';
 import {Body, Container, Header, Left, Text} from 'native-base';
+import Statistic from './screen/Statistic';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -39,9 +41,13 @@ export default class App extends Component {
             tabBarLabel: 'Home',
             tabBarIcon: () => (<Iconicons name = 'home'size = {20} color = '#ffffff'/>)
           }}/>
-          <Tab.Screen name = "Category" component={Category} options = {{
-            tabBarLabel: 'Category',
+          <Tab.Screen name = "Statistic" component={Statistic} options = {{
+            tabBarLabel: 'Statistic',
             tabBarIcon: () => (<Iconicons name = 'bar-chart'size = {20} color = '#ffffff'/>)
+          }} />
+          <Tab.Screen name = "Plan" component = {Plan} options = {{
+            tabBarLabel: 'Plan',
+            tabBarIcon: () => (<Icon name = 'clipboard-list' size = {20} color = '#ffffff'/>)
           }} />
           <Tab.Screen name = "History" component = {History} options = {{
             tabBarLabel: 'History',

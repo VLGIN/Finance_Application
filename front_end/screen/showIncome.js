@@ -1,7 +1,8 @@
 import { Container, Text , Content, Body, Right, Left} from 'native-base';
 import React, {Component} from 'react';
 import Iconicons from 'react-native-vector-icons/Ionicons';
-import {FlatList, RefreshControl, View, Alert} from 'react-native';
+import {FlatList, RefreshControl, View, Alert, StyleSheet} from 'react-native';
+import numbro from 'numbro';
 
 
 class showIncome extends Component{
@@ -62,8 +63,7 @@ class showIncome extends Component{
                     data={this.state.income_list}
                     refreshControl = {<RefreshControl refreshing={this.state.refreshing} onRefresh={() => this.onRefresh()} />}
                     renderItem={({ item, index, separators }) => (
-                        <Content style = {{height: 50, paddingLeft: 10,
-                        paddingRight: 10, paddingHorizontal:5}}>
+                        <View style = {styles.content}>
                             <Body style = {{flexDirection: 'row'}}>
                                 <Left  style = {{flex: 0.5}}>
                                     <Text style={{fontSize: 18, fontWeight: 'bold'}}>{item.name}</Text>
@@ -73,14 +73,14 @@ class showIncome extends Component{
                                         <Text style={{fontSize: 18, fontWeight: 'bold'}}>{item.Date}</Text>
                                     </Left>
                                     <Right>
-                                        <Text style={{fontSize: 18, fontWeight: 'bold'}}>{item.value}</Text>
+                                        <Text style={{fontSize: 18, fontWeight: 'bold'}}>{numbro(item.value).format({thousandSeparated: true})}</Text>
                                     </Right>
                                 </Body>
                                 <Right style = {{flex: 0.3}}>
                                     <Iconicons name = 'trash' size = {20} onPress = {() => this.delete_hist(item.idincome)}/>
                                 </Right>
                             </Body>
-                        </Content>)}
+                        </View>)}
                     keyExtractor = {item => item.idincome.toString()} >
                     </FlatList>
                 </View>
@@ -98,6 +98,18 @@ class showIncome extends Component{
     }
 }
 
-
+const styles = StyleSheet.create({
+    content: {
+        margin: 5, 
+        height: 70, 
+        paddingLeft: 10,
+        paddingRight: 10, 
+        paddingHorizontal:5,
+        backgroundColor: '#d9e6fa',
+        borderColor: 'black',
+        borderWidth: 3,
+        borderRadius: 10
+    },
+})
 
 export default showIncome;

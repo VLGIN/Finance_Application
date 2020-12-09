@@ -58,6 +58,17 @@ appdb.get_spending = () => {
     })
 };
 
+appdb.get_spending_cate = (cate) => {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT spending.categoryid, spending.value, spending.idspending, spending.type, DATE_FORMAT(spending.date, "%d-%m-%Y") AS Date, category.name FROM spending INNER JOIN category ON spending.categoryid = category.idcategory WHERE category.idcategory = ? ORDER BY Date DESC', [cate], (err, results) => {
+            if(err){
+                return reject(err);
+            }
+            return resolve(results);
+        });
+    })
+};
+
 appdb.get_income = () => {
     return new Promise((resolve, reject) =>{
         pool.query('SELECT income.value, income.idincome, income.type, DATE_FORMAT(income.date, "%d-%m-%Y") AS Date, category.name FROM income INNER JOIN category ON income.categoryid = category.idcategory ORDER BY Date DESC', (err, results) => {
@@ -69,6 +80,16 @@ appdb.get_income = () => {
     })
 };
 
+appdb.get_limitation = () => {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT limitation.*, name FROM limitation INNER JOIN category ON limitation.categoryid = category.idcategory', (err, results) => {
+            if(err){
+                return reject(ree);
+            }
+            return resolve(results);
+        })
+    })
+}
 appdb.update_category = (idcategory, name) => {
     return new Promise((resolve, reject) => {
         pool.query('INSERT INTO category (idcategory, name) VALUES (?, ?)', [idcategory,name], (err, results) => {
@@ -135,6 +156,39 @@ appdb.delete_spending = (id) => {
     })
 }
 
+appdb.delete_limitation = (id) => {
+    return new Promise((resolve, reject) => {
+        pool.query('DELETE FROM limitation WHERE categoryid = ?', [id], (err, results) => {
+            if(err){
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
+appdb.add_limitation = (categoryid, max) => {
+    return new Promise((resolve, reject)=>{
+        pool.query('call add_limitation(?,?);', [categoryid, max], (err, results) =>{
+            if(err){
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
+appdb.update_limitation = (categoryid, value) => {
+    return new Promise ((resolve, reject) => {
+        pool.query('call update_limitation(?,?);', [categoryid, value], (err, results) => {
+            if(err){
+                return reject(err);
+            }
+            else resolve(results);
+        })
+    })
+}
+
 appdb.delete_income = (id)=> {
     return new Promise((resolve, reject) => {
         pool.query('DELETE FROM income WHERE idincome = ?', [id], (err, results) => {
@@ -146,4 +200,48 @@ appdb.delete_income = (id)=> {
     })
 }
 
+
+appdb.get_spending_permonth = () => {
+    return new Promise((resolve, reject) => {
+        pool.query('select sum(value) as value, month(date) as month from spending where year(date) = year(curdate()) group by month(date);', (err, results) => {
+            if(err){
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
+appdb.get_income_permonth = () => {
+    return new Promise((resolve, reject) => {
+        pool.query('select sum(value) as value, month(date) as month from income where year(date) = year(curdate()) group by month(date);', (err, results) => {
+            if(err){
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
+appdb.get_spending_percate = () => {
+    return new Promise((resolve, reject) => {
+        pool.query("select sum(value) as value, name from spending inner join category on spending.categoryid = category.idcategory where year(date) = year(curdate()) group by name;", (err, results) => {
+            if(err){
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
+appdb.get_income_percate = () => {
+    return new Promise((resolve, reject) => {
+        pool.query("select sum(value) as value, name from income inner join category on income.categoryid = category.idcategory where year(date) = year(curdate()) group by name;", (err, results) => {
+            if(err){
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
 module.exports = appdb;

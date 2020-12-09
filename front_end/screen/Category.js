@@ -28,23 +28,34 @@ class Home extends Component{
                     <FlatList
                     data={this.state.category_list}
                     renderItem={({ item, index, separators }) => (
-                        <Content style = {{height: 50, paddingLeft: 10,
-                        paddingRight: 10, paddingHorizontal:5}}>
+                        <View style = {styles.content}>
                             <Body style = {{flexDirection: 'row'}}>
                                 <Text style={{fontSize: 18, fontWeight: 'bold'}}>{item.name}</Text>
                                 <Right>
                                     <Iconicons name = 'trash' size = {20}/>
                                 </Right>
                             </Body>
-                        </Content>)}
+                        </View>)}
                     keyExtractor = {item => item.idcategory.toString()} >
                     </FlatList>
                 </View>
             </Container>
         )
     }
-
-
-
 }
+
+const styles = StyleSheet.create({
+    content: {
+        margin: 5, 
+        height: 70, 
+        paddingLeft: 10,
+        paddingRight: 10, 
+        paddingHorizontal:5,
+        backgroundColor: '#d9e6fa',
+        borderColor: 'black',
+        borderWidth: 3,
+        borderRadius: 10
+    },
+})
+
 export default Home

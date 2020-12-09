@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import {View, /*Button, FlatList,  */StyleSheet, Modal} from 'react-native';
+import {View, /*Button,*/ FlatList,  StyleSheet, Modal} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import {Header, Container, Title, Content, Button, Left, Right, Text, Fab, Form, Input, DatePicker, Item, Label, Picker} from 'native-base';
+import {Body, Container, Content, Button, Left, Right, Text, Fab, Form, Input, DatePicker, Item, Label, Picker} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import AddIncome from './AddIncome'
 import moment from 'moment'
+import Iconicons from 'react-native-vector-icons/Ionicons';
+import numbro from 'numbro';
 
 class Home extends Component{
     
@@ -40,6 +41,7 @@ class Home extends Component{
         let income_category_item = this.state.income_list_category.map((s,i) => {
             return <Picker.Item key = {i} value = {s.idcategory} label = {s.name} />
         })
+        
         return(
             <Container style = {{flex: 1, flexDirection: 'column'}}>
                 <Modal 
@@ -48,7 +50,7 @@ class Home extends Component{
                     visible = {this.state.add_new_category}
                 >
                     <View style = {styles.modalview_mini}>
-                        <View style = {styles.reactangle}>
+                        <View style = {styles.reactangle_cate}>
                             <Text style = {{color: "#ffffff", fontSize: 28, fontFamily: 'notoserif'}}>New category</Text>
                         </View>
                         <Form style = {styles.form}>
@@ -193,7 +195,7 @@ class Home extends Component{
                 </Modal>
                 <Content contentContainerStyle = {{height: '100%', alignItems: 'center', flex: 1, justifyContent: 'center'}}>
                     <View style = {styles.circle}>
-                        <Text style = {{alignContent: 'center', fontFamily: 'notoserif', fontSize: 35,fontWeight: 'bold', color: '#ffffff'}}>{this.state.balance}</Text>
+                        <Text style = {{alignContent: 'center', fontFamily: 'notoserif', fontSize: 35,fontWeight: 'bold', color: '#ffffff'}}>{numbro(this.state.balance).format({thousandSeparated: true})}</Text>
                         <Text style = {{alignContent: 'center', fontFamily: 'notoserif', fontSize: 35,fontWeight: 'bold', color: '#ffffff'}}>VND</Text>
                     </View>
                 </Content>
@@ -347,7 +349,19 @@ class Home extends Component{
                     "userid": 1
                 })
             })
-            
+            await fetch('http://10.0.2.2:5000/update/limitation',{
+                method: 'post',
+                mode: 'no-cors',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+
+                body: JSON.stringify({
+                    "value": this.state.spending_value,
+                    "categoryid": this.state.spending_category_selected
+                })
+            })
             await this.setState({
                 balance: this.state.balance - this.state.spending_value,
                 spending_value: 0,
@@ -390,7 +404,7 @@ class Home extends Component{
             spending_list_category: cate,
             income_list_category: cate2,
             spending_category_selected: cate[0].idcategory,
-            income_category_selected: cate2[0].idcategory
+            income_category_selected: cate2[0].idcategory,
         })
     }
 }
@@ -403,6 +417,21 @@ const styles = StyleSheet.create({
         backgroundColor: "#23596e",
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    circlebutton: {
+        width: 180,
+        height: 70,
+        borderRadius: 60/2,
+        backgroundColor: "#23596e",
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+        marginLeft: 5,
+        marginRight: 5,
+    },
+    bound: {
+        marginBottom: 5,
+        flexDirection: 'row'
     },
     fab: {
         backgroundColor: '#23596e', 
@@ -451,6 +480,26 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5
     },
+    modalview_mini2: {
+        marginTop: 120,
+        marginLeft: 20,
+        marginRight: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        height: 500,
+        //padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        borderColor: "#23596e",
+        borderWidth: 1
+    },
     button: {
         backgroundColor: "#23596e",
         borderRadius: 5
@@ -468,7 +517,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 5,
-        backgroundColor: "#23596e"
+        backgroundColor: "#23596e",
+    },
+    reactangle_cate: {
+        flexDirection: 'column',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 5,
+        backgroundColor: "#23596e",
+        borderRadius: 20
     }
 })
 export default Home
