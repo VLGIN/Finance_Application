@@ -49,7 +49,7 @@ appdb.get_category = (type) => {
 
 appdb.get_spending = () => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT spending.value, spending.idspending, spending.type, DATE_FORMAT(spending.date, "%d-%m-%Y") AS Date, category.name FROM spending INNER JOIN category ON spending.categoryid = category.idcategory ORDER BY Date DESC', (err, results) => {
+        pool.query('SELECT spending.value, spending.idspending, spending.type, DATE_FORMAT(spending.date, "%d-%m-%Y") AS Date, category.name FROM spending INNER JOIN category ON spending.categoryid = category.idcategory;', (err, results) => {
             if(err){
                 return reject(err);
             }
@@ -60,7 +60,7 @@ appdb.get_spending = () => {
 
 appdb.get_spending_cate = (cate) => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT spending.categoryid, spending.value, spending.idspending, spending.type, DATE_FORMAT(spending.date, "%d-%m-%Y") AS Date, category.name FROM spending INNER JOIN category ON spending.categoryid = category.idcategory WHERE category.idcategory = ? ORDER BY Date DESC', [cate], (err, results) => {
+        pool.query('SELECT spending.categoryid, spending.value, spending.idspending, spending.type, DATE_FORMAT(spending.date, "%d-%m-%Y") AS Date, category.name FROM spending INNER JOIN category ON spending.categoryid = category.idcategory WHERE category.idcategory = ? and month(date) = month(curdate()) ORDER BY Date DESC', [cate], (err, results) => {
             if(err){
                 return reject(err);
             }
@@ -178,9 +178,9 @@ appdb.add_limitation = (categoryid, max) => {
     })
 }
 
-appdb.update_limitation = (categoryid, value) => {
+appdb.update_limitation = (categoryid, value, date) => {
     return new Promise ((resolve, reject) => {
-        pool.query('call update_limitation(?,?);', [categoryid, value], (err, results) => {
+        pool.query("call update_limitation(?,?, ?);", [categoryid, value, date], (err, results) => {
             if(err){
                 return reject(err);
             }

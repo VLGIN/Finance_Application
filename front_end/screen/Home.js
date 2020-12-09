@@ -106,8 +106,8 @@ class Home extends Component{
                                     mode = 'dropdown'
                                     placeholder = "Choose type"
                                     placeholderStyle = {{color:"#bfc6ea"}}
-                                    selectedValue = {this.state.spending_type_selected}
-                                    onValueChange = {(value) => this.IncomeTypeChange(value)}
+                                    selectedValue = {this.state.income_type_selected}
+                                    onValueChange = {(value) => this.setState({income_type_selected: value})}
                                 >
                                     <Picker.Item label = "Dinh ki" value = "1"></Picker.Item>
                                     <Picker.Item label = "Bat thuong" value = "0"></Picker.Item>
@@ -359,7 +359,8 @@ class Home extends Component{
 
                 body: JSON.stringify({
                     "value": this.state.spending_value,
-                    "categoryid": this.state.spending_category_selected
+                    "categoryid": this.state.spending_category_selected,
+                    "date": moment(this.state.spending_date).format("YYYY-MM-DD"),
                 })
             })
             await this.setState({

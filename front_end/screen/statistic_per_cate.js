@@ -1,7 +1,7 @@
 import {Container, Text, Content, Body, Right, Left, Button, Form, Item, Label, Input, Picker} from 'native-base';
 import React, {Component} from 'react';
 import Iconicons from 'react-native-vector-icons/Ionicons';
-import {View, RefreshControl, StyleSheet, FlatList, Modal, Dimensions} from 'react-native';
+import {View, RefreshControl, StyleSheet, FlatList, Modal, Dimensions, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import numbro from 'numbro';
 import {
@@ -18,7 +18,7 @@ class Statistic_per_cate extends Component{
     constructor(props){
         super(props);
         this.state = {
-            color: ["#5e90e0", "#2c9c4b","#f5d63b","#07214a","#f5d63b", "#eb2842", "#b0daeb"],
+            color: ["#5e90e0", "#396ab8","#194791","#07214a","#f5d63b", "#eb2842", "#b0daeb"],
             chartConfig: {
                 backgroundGradientFrom: "#1E2923",
                 backgroundGradientFromOpacity: 0,
@@ -32,14 +32,21 @@ class Statistic_per_cate extends Component{
             screenHeight: Dimensions.get("window").height,
             screenWidth: Dimensions.get("window").width,
             data: [],
-            data_income: []
+            data_income: [],
+            refresh: false
         }
     }
     
     render(){
         return(
             <Container>
-                <View style = {{margin: 10, borderRadius: 20, backgroundColor: '#23596e'}}>
+                <ScrollView
+                    refreshControl = {<RefreshControl refreshing={this.state.refreshing} onRefresh={() => this.onRefresh()} />}
+                >
+                <View style = {{alignContent: 'center', alignItems: 'center'}}>
+                            <Text style =  {styles.text}>SPENDING</Text>
+                </View>
+                <View style = {{margin: 5, borderRadius: 20, backgroundColor: '#125c7a'}}>
                     <PieChart 
                         data = {this.state.data}
                         width={this.state.screenWidth*0.95}
@@ -55,7 +62,10 @@ class Statistic_per_cate extends Component{
                     />
                     
                 </View>
-                <View style = {{margin: 10, borderRadius: 20, backgroundColor: '#23596e'}}>
+                <View style = {{alignContent: 'center', alignItems: 'center'}}>
+                            <Text style =  {styles.text}>INCOME</Text>
+                </View>
+                <View style = {{margin: 5, borderRadius: 20, backgroundColor: '#125c7a'}}>
                 <PieChart 
                         data = {this.state.data_income}
                         width={this.state.screenWidth*0.95}
@@ -69,8 +79,15 @@ class Statistic_per_cate extends Component{
                         absolute
                     />
                 </View>
+                </ScrollView>
             </Container>
         )
+    }
+
+    async onRefresh(){
+        this.setState({resfreshing: true});
+        await this.componentDidMount();
+        this.setState({refreshing: false});
     }
 
     async componentDidMount(){
@@ -79,17 +96,16 @@ class Statistic_per_cate extends Component{
         
         let res2 = await fetch('http://10.0.2.2:5000/income/per/cate');
         let income_cate = await res2.json();
-        console.log(income_cate);
         for (let i = 0; i<income_cate.length; i++){
             income_cate[i]["color"] = this.state.color[i];
             income_cate[i]["legendFontColor"] = "#000000";
             income_cate[i]["legendFontSize"] = 15;
         }
-        console.log(spending_cate);
         for (let i = 0; i< spending_cate.length; i++){
             spending_cate[i]["color"] = this.state.color[i];
             spending_cate[i]["legendFontColor"] = "#000000";
             spending_cate[i]["legendFontSize"] = 15;
+            spending_cate[i]["legendFontWeight"] = "bold";
         }
         this.setState({
             data: spending_cate,
@@ -97,5 +113,14 @@ class Statistic_per_cate extends Component{
         })
     }
 }
+
+const styles = StyleSheet.create({
+    text: {
+        alignContent: 'center',
+        padding: 5,
+        color: "#23596e",
+        fontFamily: 'notoserif', fontSize: 18,fontWeight: 'bold'
+    }
+})
 
 export default Statistic_per_cate;

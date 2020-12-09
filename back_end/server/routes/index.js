@@ -129,7 +129,9 @@ router.post('/update/limitation', async(req, res, next) => {
     try{
         let categoryid = req.body.categoryid;
         let value = req.body.value;
-        await db.update_limitation(categoryid, value);
+        let date = req.body.date;
+        console.log(categoryid);
+        await db.update_limitation(categoryid, value, date);
         res.redirect('/get/limitation');
     }
     catch(e){

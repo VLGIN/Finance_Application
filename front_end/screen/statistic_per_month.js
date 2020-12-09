@@ -14,6 +14,7 @@ import {
     StackedBarChart
   } from "react-native-chart-kit";
 import { Line } from 'react-native-svg';
+import { ScrollView } from 'react-native-gesture-handler';
 
 class Statistic_per_month extends Component{
     constructor(props){
@@ -21,7 +22,8 @@ class Statistic_per_month extends Component{
         this.state = {
             height: Dimensions.get("window").height,
             data: [0,0,0,0,0,0,0,0,0,0,0,0],
-            data_income: [0,0,0,0,0,0,0,0,0,0,0,0]
+            data_income: [0,0,0,0,0,0,0,0,0,0,0,0],
+            refresh: false
         }
     }
     
@@ -44,14 +46,17 @@ class Statistic_per_month extends Component{
         }
         return(
             <Container>
+                <ScrollView
+                    refreshControl = {<RefreshControl refreshing={this.state.refreshing} onRefresh={() => this.onRefresh()} />}
+                >
                 <View style = {{backgroundColor: "#23596e", height: this.state.height}}>
-                    <View style = {{backgroundColor: "#23596e"}}>
+                    <View style = {{padding: 5}}>
                         <View style = {{alignContent: 'center', alignItems: 'center', backgroundColor: "#23596e"}}>
                             <Text style =  {styles.text}>SPENDING</Text>
                         </View>
                         <LineChart
                             data={data}
-                            width={Dimensions.get("window").width} // from react-native
+                            width={Dimensions.get("window").width*0.98} // from react-native
                             height={220}
                             yAxisLabel=""
                             yAxisSuffix="k"
@@ -80,13 +85,13 @@ class Statistic_per_month extends Component{
                             }}
                         />
                     </View>
-                    <View style = {{backgroundColor: "#23596e"}}>
+                    <View style = {{padding: 5}}>
                         <View style = {{alignContent: 'center', alignItems: 'center', backgroundColor: "#23596e"}}>
                             <Text style =  {styles.text}>INCOME</Text>
                         </View>
                         <LineChart
                             data={data_income}
-                            width={Dimensions.get("window").width} // from react-native
+                            width={Dimensions.get("window").width*0.98} // from react-native
                             height={220}
                             yAxisLabel=""
                             yAxisSuffix="k"
@@ -116,8 +121,15 @@ class Statistic_per_month extends Component{
                         />
                     </View>
                 </View>
+                </ScrollView>
             </Container>
         )
+    }
+
+    async onRefresh(){
+        this.setState({resfreshing: true});
+        await this.componentDidMount();
+        this.setState({refreshing: false})
     }
 
     async componentDidMount(){

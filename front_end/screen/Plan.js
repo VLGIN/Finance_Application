@@ -1,7 +1,7 @@
 import {Container, Text, Content, Body, Right, Left, Button, Form, Item, Label, Input, Picker} from 'native-base';
 import React, {Component} from 'react';
 import Iconicons from 'react-native-vector-icons/Ionicons';
-import {View, RefreshControl, StyleSheet, FlatList, Modal} from 'react-native';
+import {View, RefreshControl, StyleSheet, FlatList, Modal, Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import numbro from 'numbro';
 
@@ -9,6 +9,7 @@ class Plan extends Component{
     constructor(props){
         super(props);
         this.state = {
+            height: Dimensions.get("window").height,
             limitation: [],
             add_new_limitation: false,
             show_hist: false,
@@ -114,7 +115,7 @@ class Plan extends Component{
                         <Button style = {styles.button_1} onPress = {() => {this.setState({show_hist: false})}}><Text>Back</Text></Button>
                     </View>
                 </Modal>
-                <View>
+                <View style = {{backgroundColor: "#ffffff", height: this.state.height, marginTop:1, marginBottom: 1}}>
                     <View style = {styles.content}>
                     <Body style = {{flexDirection: 'row'}} onPress = {() => {this.touch()}}>
                                 <Left  style = {{flex: 0.5}}>
