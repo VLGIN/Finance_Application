@@ -82,6 +82,17 @@ router.get('/get/limitation', async(req, res, next) => {
     }
 })
 
+router.get('/get/year', async(req, res, next) => {
+    try{
+        let results = await db.get_year();
+        res.json(results);
+    }
+    catch(e){
+        console.log(e);
+        res.sendStatus(500);
+    }
+})
+
 router.post('/post/category', async(req, res, next)=>{
     try{
         let idcate = req.body.id;
@@ -218,9 +229,9 @@ router.post('/add/category', async(req, res, next) => {
     }
 })
 
-router.get('/spending/per/month', async(req, res, next) => {
+router.get('/spending/per/month/:year', async(req, res, next) => {
     try{
-        let result = await db.get_spending_permonth();
+        let result = await db.get_spending_permonth(req.params.year);
         res.json(result);
     }
     catch(e){
@@ -229,9 +240,9 @@ router.get('/spending/per/month', async(req, res, next) => {
     }
 })
 
-router.get('/income/per/month', async(req, res, next) => {
+router.get('/income/per/month/:year', async(req, res, next) => {
     try{
-        let result = await db.get_income_permonth();
+        let result = await db.get_income_permonth(req.params.year);
         res.json(result);
     }
     catch(e){
@@ -240,9 +251,9 @@ router.get('/income/per/month', async(req, res, next) => {
     }
 })
 
-router.get('/spending/per/cate', async(req, res, next) => {
+router.get('/spending/per/cate/:year', async(req, res, next) => {
     try{
-        let result = await db.get_spending_percate();
+        let result = await db.get_spending_percate(req.params.year);
         res.json(result);
     }
     catch(e){
@@ -251,9 +262,9 @@ router.get('/spending/per/cate', async(req, res, next) => {
     }
 })
 
-router.get('/income/per/cate', async(req, res, next) => {
+router.get('/income/per/cate/:year', async(req, res, next) => {
     try{
-        let result = await db.get_income_percate();
+        let result = await db.get_income_percate(req.params.year);
         res.json(result);
     }
     catch(e){

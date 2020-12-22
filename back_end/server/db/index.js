@@ -69,6 +69,17 @@ appdb.get_spending_cate = (cate) => {
     })
 };
 
+appdb.get_year = () => {
+    return new Promise((resolve, reject) => {
+        pool.query('(SELECT DISTINCT YEAR(date) AS YEAR from spending) union (SELECT DISTINCT YEAR(date) AS YEAR from income) ORDER BY YEAR DESC;', (err, results) =>{
+            if(err){
+                return reject(err);
+            }
+            return resolve(results);
+        });
+    })
+}
+
 appdb.get_income = () => {
     return new Promise((resolve, reject) =>{
         pool.query('SELECT income.value, income.idincome, income.type, DATE_FORMAT(income.date, "%d-%m-%Y") AS Date, category.name FROM income INNER JOIN category ON income.categoryid = category.idcategory ORDER BY Date DESC', (err, results) => {
@@ -201,9 +212,9 @@ appdb.delete_income = (id)=> {
 }
 
 
-appdb.get_spending_permonth = () => {
+appdb.get_spending_permonth = (year) => {
     return new Promise((resolve, reject) => {
-        pool.query('select sum(value) as value, month(date) as month from spending where year(date) = year(curdate()) group by month(date);', (err, results) => {
+        pool.query('select sum(value) as value, month(date) as month from spending where year(date) = ? group by month(date);', [year], (err, results) => {
             if(err){
                 return reject(err);
             }
@@ -212,9 +223,9 @@ appdb.get_spending_permonth = () => {
     })
 }
 
-appdb.get_income_permonth = () => {
+appdb.get_income_permonth = (year) => {
     return new Promise((resolve, reject) => {
-        pool.query('select sum(value) as value, month(date) as month from income where year(date) = year(curdate()) group by month(date);', (err, results) => {
+        pool.query('select sum(value) as value, month(date) as month from income where year(date) = ? group by month(date);', [year], (err, results) => {
             if(err){
                 return reject(err);
             }
@@ -223,9 +234,9 @@ appdb.get_income_permonth = () => {
     })
 }
 
-appdb.get_spending_percate = () => {
+appdb.get_spending_percate = (year) => {
     return new Promise((resolve, reject) => {
-        pool.query("select sum(value) as value, name from spending inner join category on spending.categoryid = category.idcategory where year(date) = year(curdate()) group by name;", (err, results) => {
+        pool.query("select sum(value) as value, name from spending inner join category on spending.categoryid = category.idcategory where year(date) = ? group by name;", [year],(err, results) => {
             if(err){
                 return reject(err);
             }
@@ -234,9 +245,9 @@ appdb.get_spending_percate = () => {
     })
 }
 
-appdb.get_income_percate = () => {
+appdb.get_income_percate = (year) => {
     return new Promise((resolve, reject) => {
-        pool.query("select sum(value) as value, name from income inner join category on income.categoryid = category.idcategory where year(date) = year(curdate()) group by name;", (err, results) => {
+        pool.query("select sum(value) as value, name from income inner join category on income.categoryid = category.idcategory where year(date) = ? group by name;",[year] ,(err, results) => {
             if(err){
                 return reject(err);
             }

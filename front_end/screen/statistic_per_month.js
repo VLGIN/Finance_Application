@@ -23,27 +23,32 @@ class Statistic_per_month extends Component{
             height: Dimensions.get("window").height,
             data: [0,0,0,0,0,0,0,0,0,0,0,0],
             data_income: [0,0,0,0,0,0,0,0,0,0,0,0],
-            refresh: false
+            refresh: false,
+            year_selected: new Date().getFullYear(),
+            data_first_fig: {
+                labels: ["Jan", "Feb", "Mar", "Apr", "M", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                datasets: [
+                    {
+                        data: [0,0,0,0,0,0,0,0,0,0,0,0]
+                    }
+                ]
+            },
+            data_second_fig: {
+                labels: ["Jan", "Feb", "Mar", "Apr", "M", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                datasets: [
+                    {
+                        data: [0,0,0,0,0,0,0,0,0,0,0,0]
+                    }
+                ]
+            },
+            year: []
         }
     }
     
     render(){
-        let data = {
-            labels: ["Jan", "Feb", "Mar", "Apr", "M", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-            datasets: [
-                {
-                    data: this.state.data
-                }
-            ]
-        }
-        let data_income = {
-            labels: ["Jan", "Feb", "Mar", "Apr", "M", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-            datasets: [
-                {
-                    data: this.state.data_income
-                }
-            ]
-        }
+        let year_item = this.state.year.map((s, i) => {
+            return <Picker.Item key = {i} value = {s.YEAR} label = {s.YEAR.toString()} />
+        })
         return(
             <Container>
                 <ScrollView
@@ -55,7 +60,7 @@ class Statistic_per_month extends Component{
                             <Text style =  {styles.text}>SPENDING</Text>
                         </View>
                         <LineChart
-                            data={data}
+                            data={this.state.data_first_fig}
                             width={Dimensions.get("window").width*0.98} // from react-native
                             height={220}
                             yAxisLabel=""
@@ -90,7 +95,7 @@ class Statistic_per_month extends Component{
                             <Text style =  {styles.text}>INCOME</Text>
                         </View>
                         <LineChart
-                            data={data_income}
+                            data={this.state.data_second_fig}
                             width={Dimensions.get("window").width*0.98} // from react-native
                             height={220}
                             yAxisLabel=""
@@ -120,10 +125,71 @@ class Statistic_per_month extends Component{
                             }}
                         />
                     </View>
+                    <View >
+                        <Body style =  {styles.bottom}>
+                            <Left style = {{marginLeft: 50}}>
+                                <Text style = {styles.text}>Year</Text>
+                            </Left>
+                                <Picker
+                                    note
+                                    mode = 'dropdown'
+                                    placeholder = "Choose Category"
+                                    placeholderStyle = {{color: "#bfc6ea"}}
+                                    selectedValue = {this.state.year_selected}
+                                    onValueChange = {(value) => this.onYearChange(value)}
+                                >
+                                    {year_item}
+                                </Picker>
+                        </Body>
+                    </View>
                 </View>
                 </ScrollView>
             </Container>
         )
+    }
+
+    async onYearChange(value){
+        this.setState({
+            year_selected: value,
+            data: [0,0,0,0,0,0,0,0,0,0,0,0],
+            data_income: [0,0,0,0,0,0,0,0,0,0,0,0]
+        })
+        let res = await fetch('http://10.0.2.2:5000/spending/per/month/' + value.toString());
+        let spending_month = await res.json();
+        for(let i = 0; i<spending_month.length; i++){
+            this.state.data[spending_month[i].month - 1]= spending_month[i].value / 1000;
+        }
+
+
+        let res2 = await fetch('http://10.0.2.2:5000/income/per/month/' + value.toString());
+        let income_month = await res2.json();
+        for (let i = 0; i<income_month.length; i++){
+            this.state.data_income[income_month[i].month - 1] = income_month[i].value / 1000;
+        }
+
+        let data_first = {
+            labels: ["Jan", "Feb", "Mar", "Apr", "M", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            datasets: [
+                {
+                    data: this.state.data
+                }
+            ]
+        }
+
+        let data_second = {
+            labels: ["Jan", "Feb", "Mar", "Apr", "M", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            datasets: [
+                {
+                    data: this.state.data_income
+                }
+            ]
+        }
+
+        this.setState({
+            data_first_fig: data_first,
+            data_second_fig: data_second
+        })
+
     }
 
     async onRefresh(){
@@ -133,21 +199,44 @@ class Statistic_per_month extends Component{
     }
 
     async componentDidMount(){
-        let res = await fetch('http://10.0.2.2:5000/spending/per/month');
+        let cur_year = new Date().getFullYear();
+        let res = await fetch('http://10.0.2.2:5000/spending/per/month/' + cur_year.toString());
         let spending_month = await res.json();
         for(let i = 0; i<spending_month.length; i++){
             this.state.data[spending_month[i].month - 1]= spending_month[i].value / 1000;
         }
 
 
-        let res2 = await fetch('http://10.0.2.2:5000/income/per/month');
+        let res2 = await fetch('http://10.0.2.2:5000/income/per/month/' + cur_year.toString());
         let income_month = await res2.json();
         for (let i = 0; i<income_month.length; i++){
             this.state.data_income[income_month[i].month - 1] = income_month[i].value / 1000;
         }
+        
+        let response = await fetch('http://10.0.2.2:5000/get/year');
+        let year_list = await response.json();
+        let data_first = {
+            labels: ["Jan", "Feb", "Mar", "Apr", "M", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            datasets: [
+                {
+                    data: this.state.data
+                }
+            ]
+        }
+
+        let data_second = {
+            labels: ["Jan", "Feb", "Mar", "Apr", "M", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            datasets: [
+                {
+                    data: this.state.data_income
+                }
+            ]
+        }
+
         this.setState({
-            data: this.state.data,
-            data_income: this.state.data_income
+            data_first_fig: data_first,
+            data_second_fig: data_second,
+            year: year_list
         })
     }
 }
@@ -158,6 +247,10 @@ const styles = StyleSheet.create({
         padding: 5,
         color: "#ffffff",
         fontFamily: 'notoserif', fontSize: 18,fontWeight: 'bold'
+    },
+    bottom: {
+        margin: 10,
+        flexDirection: 'row'
     }
 })
 export default Statistic_per_month;
