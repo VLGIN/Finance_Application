@@ -82,7 +82,7 @@ class Home extends Component{
                         <Form style = {styles.form}>
                             <Item floatingLabel style = {styles.item}>
                                 <Label style = {{fontSize: 20}}>Value</Label>
-                                <Input keyboardType = 'number-pad'
+                                <Input keyboardType = 'number-pad' 
                                 onChangeText= {(value) => this.setState({income_value: value})} />
                             </Item>
                             <Item style = {styles.item}>

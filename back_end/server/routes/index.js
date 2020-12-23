@@ -183,7 +183,19 @@ router.post('/delete/spending', async(req, res, next) => {
     try{
         let id = req.body.id;
         await db.delete_spending(id);
-        res.redirect('get/spending');
+        res.redirect('/get/spending');
+    }
+    catch(e){
+        console.log(e);
+        res.sendStatus(500);
+    }
+})
+
+router.post('/delete/category', async(req,res, next) => {
+    try{
+        let id = req.body.id;
+        await db.delete_category(id);
+        res.redirect('/get/category/0');
     }
     catch(e){
         console.log(e);

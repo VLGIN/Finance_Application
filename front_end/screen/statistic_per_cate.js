@@ -111,7 +111,6 @@ class Statistic_per_cate extends Component{
             data: [],
             data_income: [],
         })
-        console.log(value)
         let res = await fetch('http://10.0.2.2:5000/spending/per/cate/' + value.toString());
         let spending_cate = await res.json();
         
@@ -122,7 +121,6 @@ class Statistic_per_cate extends Component{
             income_cate[i]["legendFontColor"] = "#000000";
             income_cate[i]["legendFontSize"] = 15;
         }
-        console.log(spending_cate)
         for (let i = 0; i< spending_cate.length; i++){
             spending_cate[i]["color"] = this.state.color[i];
             spending_cate[i]["legendFontColor"] = "#000000";
@@ -178,8 +176,10 @@ const styles = StyleSheet.create({
         fontFamily: 'notoserif', fontSize: 18,fontWeight: 'bold'
     },
     bottom: {
-        margin: 10,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginBottom: 40,
+        marginLeft: 10,
+        marginRight: 10
     }
 })
 

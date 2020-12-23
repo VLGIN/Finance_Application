@@ -211,6 +211,18 @@ appdb.delete_income = (id)=> {
     })
 }
 
+appdb.delete_category = (id) => {
+    return new Promise ((resolve, reject) => {
+        console.log(id);
+        pool.query('DELETE FROM category WHERE idcategory = ?', [id], (err, results) => {
+            if(err){
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
 
 appdb.get_spending_permonth = (year) => {
     return new Promise((resolve, reject) => {
