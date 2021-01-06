@@ -285,4 +285,27 @@ router.get('/income/per/cate/:year', async(req, res, next) => {
     }
 })
 
+router.get('/spending/type/:type', async(req, res, next) => {
+    try{
+        let type = req.params.type;
+        let result = await db.get_spending_type(type);
+        res.json(result);
+    }
+    catch(e){
+        console.log(e);
+        res.sendStatus(500);
+    }
+})
+
+router.get('/income/type/:type', async(req, res, next) => {
+    try{
+        let result = await db.get_income_type(req.params.type);
+        res.json(result);
+    }
+    catch(e){
+        console.log(e);
+        res.sendStatus(500);
+    }
+})
+
 module.exports = router;

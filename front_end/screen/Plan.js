@@ -1,4 +1,4 @@
-import {Container, Text, Content, Body, Right, Left, Button, Form, Item, Label, Input, Picker} from 'native-base';
+import {Container, Text, Content, Body, Right, Left, Button, Form, Item, Label, Input, Picker, Card, CardItem} from 'native-base';
 import React, {Component} from 'react';
 import Iconicons from 'react-native-vector-icons/Ionicons';
 import {View, RefreshControl, StyleSheet, FlatList, Modal, Dimensions} from 'react-native';
@@ -75,7 +75,8 @@ class Plan extends Component{
                             <FlatList
                             data={this.state.hist_list}
                             renderItem={({ item, index, separators }) => (
-                                <View style = {styles.content}>
+                                <Card style = {styles.card}>
+                                <CardItem style = {styles.content}>
                                     <Body style = {{flexDirection: 'row'}} onPress = {() => {this.touch()}}>
                                         <Left  style = {{flex: 0.5}}>
                                             <Text style={styles.black}>{item.name}</Text>
@@ -91,7 +92,8 @@ class Plan extends Component{
                                         <Right style = {{flex: 0.3}}>
                                         </Right>
                                     </Body>
-                                </View>)}
+                                </CardItem>
+                                </Card>)}
                             keyExtractor = {item => item.idspending.toString()} >
                             </FlatList>
                         </View>
@@ -247,6 +249,9 @@ class Plan extends Component{
 }
 
 const styles = StyleSheet.create({
+    card: {
+        backgroundColor:'#d9e6fa'
+    },
     content: {
         margin: 5, 
         height: 70, 
@@ -254,9 +259,6 @@ const styles = StyleSheet.create({
         paddingRight: 10, 
         paddingHorizontal:5,
         backgroundColor: '#d9e6fa',
-        borderColor: 'black',
-        borderWidth: 3,
-        borderRadius: 10
     },
     modal_1: {
         marginTop: 58,
@@ -269,11 +271,13 @@ const styles = StyleSheet.create({
     red: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: 'red'
+        color: 'red',
+        fontFamily: 'sans-serif-condensed'
     },
     black: {
         fontSize: 18,
-        fontWeight: 'bold'
+        fontWeight: 'bold', 
+        fontFamily: 'sans-serif-condensed'
     },
     button: {
         position: 'absolute',

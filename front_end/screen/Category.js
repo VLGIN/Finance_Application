@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {View,FlatList,  StyleSheet, TouchableHighlight, Modal, Alert} from 'react-native';
+import {View,FlatList,  StyleSheet, TouchableHighlight, Modal, Alert, Dimensions} from 'react-native';
 import {ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import {Header, Container, Form, Item, Label, Input, Footer, Button, FooterTab, Left, Right, Text, Tab, Tabs, Body, Picker} from 'native-base';
+import {Header, Container, Form, Item, Label, Input, Footer, Button, FooterTab, Left, Right, Text, Body, Picker, Card, CardItem} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Iconicons from 'react-native-vector-icons/Ionicons';
 class Home extends Component{
@@ -128,37 +128,48 @@ class Home extends Component{
                         </View>
                     </View>
                 </Modal>
-                    <View style = {styles.textt}>
-                        <Text style = {styles.text}>SPENDING</Text>
+                    <View>
+                        <Text style = {{color:'#23596e', padding: 4, fontSize: 22, fontFamily: 'sans-serif-condensed', fontWeight: 'bold'}}>SPENDING</Text>
                     </View>
                     <FlatList
+                    style = {{height: Dimensions.get("window").height * 0.8}}
                     data={this.state.category_spending_list}
                     renderItem={({ item, index, separators }) => (
-                        <View style = {styles.content}>
+                        <Card style={styles.card}>
+                        <CardItem style = {styles.content}>
                             <Body style = {{flexDirection: 'row'}}>
-                                <Text style={{fontSize: 18, fontWeight: 'bold'}}>{item.name}</Text>
+                                <Left>
+                                <Text style={{fontSize: 18, fontFamily: 'sans-serif-condensed', fontWeight: 'bold'}}>{item.name}</Text>
+                                </Left>
                                 <Right>
                                     <Iconicons name = 'trash' onPress = {()=> this.delete_category(item.idcategory)} size = {20}/>
                                 </Right>
                             </Body>
-                        </View>)}
+                        </CardItem>
+                        </Card>
+                        )}
                     keyExtractor = {item => item.idcategory.toString()} >
                     </FlatList>
-                    <View style ={styles.textt}>
-                        <Text style = {styles.text}>INCOME</Text>
+                    <View>
+                        <Text style = {{color:'#23596e', padding: 4, fontSize: 22, fontFamily: 'sans-serif-condensed', fontWeight: 'bold'}}>INCOME</Text>
                     </View>
                     <FlatList
+                    style = {{height: Dimensions.get("window").height * 0.2}}
                     style = {{marginBottom: 80}}
                     data={this.state.category_list}
                     renderItem={({ item, index, separators }) => (
-                        <View style = {styles.content}>
+                        <Card style = {styles.card}>
+                        <CardItem style = {styles.content}>
                             <Body style = {{flexDirection: 'row'}}>
-                                <Text style={{fontSize: 18, fontWeight: 'bold'}}>{item.name}</Text>
+                                <Left>
+                                <Text style={{fontSize: 18 , fontFamily: 'sans-serif-condensed', fontWeight: 'bold'}}>{item.name}</Text>
+                                </Left>
                                 <Right>
                                     <Iconicons name = 'trash' onPress = {()=> this.delete_category(item.idcategory)} size = {20}/>
                                 </Right>
                             </Body>
-                        </View>)}
+                        </CardItem>
+                        </Card>)}
                     keyExtractor = {item => item.idcategory.toString()} >
                     </FlatList>
 
@@ -171,6 +182,9 @@ class Home extends Component{
 }
 
 const styles = StyleSheet.create({
+    card: {
+        backgroundColor:'#d9e6fa'
+    },
     content: {
         margin: 5, 
         height: 70, 
@@ -178,9 +192,6 @@ const styles = StyleSheet.create({
         paddingRight: 10, 
         paddingHorizontal:5,
         backgroundColor: '#d9e6fa',
-        borderColor: 'black',
-        borderWidth: 3,
-        borderRadius: 10
     },
     button1: {
         position: 'absolute',
@@ -194,14 +205,15 @@ const styles = StyleSheet.create({
     },
     text: {
         fontWeight: 'bold',
-        color: "#23596e",
+        color: "white",
         margin: 10,
         alignItems: 'center',
         alignContent: 'center'
     },
     textt: {
         alignItems: 'center',
-        alignContent: 'center'
+        alignContent: 'center',
+        backgroundColor: '#23596e'
     },
     modalview_mini: {
         marginTop: 150,

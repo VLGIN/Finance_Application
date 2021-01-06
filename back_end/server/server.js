@@ -6,6 +6,7 @@ const fs = require('fs')
 
 const https = require('https');
 const { fstat } = require('fs');
+const db = require('./db')
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use('/', apiRouter)
 //   cert: fs.readFileSync('server.cert')
 // }, app)
 
-.listen(process.env.PORT || '5000', () => {
+.listen(process.env.PORT || '5000', async () => {
+    let result = await db.setup();
     console.log(`Example app listening at port: ${process.env.PORT || '5000'}`);
   });

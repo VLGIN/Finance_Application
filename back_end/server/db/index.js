@@ -12,6 +12,17 @@ const pool = mysql.createPool({
 
 let appdb = {};
 
+appdb.setup = () => {
+    return new Promise((resolve, reject) => {
+        pool.query('call setup();', (err, results) => {
+            if(err){
+                return reject(err);
+            }
+            return resolve(results);
+        });
+    })
+};
+
 appdb.get_all = () => {
     return new Promise((resolve, reject) =>{
         pool.query('SELECT * FROM user', (err, results) => {
@@ -57,6 +68,28 @@ appdb.get_spending = () => {
         });
     })
 };
+
+appdb.get_spending_type = (type) => {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT spending.value, spending.idspending, spending.type, DATE_FORMAT(spending.date, "%d-%m-%Y") AS Date, category.name FROM spending INNER JOIN category ON spending.categoryid = category.idcategory where spending.type = ?;', [type], (err,results) => {
+            if(err){
+                return reject(err);
+            }
+            return resolve(results);
+        });
+    })
+}
+
+appdb.get_income_type = (type) => {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT income.value, income.idincome, income.type, DATE_FORMAT(income.date, "%d-%m-%Y") AS Date, category.name FROM income INNER JOIN category ON income.categoryid = category.idcategory where income.type = ? ORDER BY Date;', [type], (err, results) => {
+            if(err){
+                return reject(err);
+            }
+            return resolve(results);
+        });
+    })
+}
 
 appdb.get_spending_cate = (cate) => {
     return new Promise((resolve, reject) => {

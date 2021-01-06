@@ -1,7 +1,6 @@
 import {Container, Text,Header, Content, Body, Right, Left, Button, Form, Item, Label, Input, Picker} from 'native-base';
 import React, {Component} from 'react';
 import Iconicons from 'react-native-vector-icons/Ionicons';
-import {View, RefreshControl, StyleSheet, FlatList, Modal, Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import numbro from 'numbro';
 import {
