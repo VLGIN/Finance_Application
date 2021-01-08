@@ -22,7 +22,7 @@ export default class App1 extends Component {
     <Container>
       <Header style = {{backgroundColor: "#23596e"}} androidStatusBarColor="#23596e">
         <Left>
-          <Iconicons  name = 'menu' size = {26} color = '#ffffff' onPress = {() =>{this.props.navigation.toggleDrawer()}}></Iconicons>
+          <Icon  name = 'accusoft' size = {26} color = '#ffffff' onPress = {() =>{this.props.navigation.toggleDrawer()}}></Icon>
         </Left>
         <Body>
           <Text style =  {{fontFamily: 'notoserif', fontSize: 18,fontWeight: 'bold', color: '#ffffff'}}>Financial Management</Text>

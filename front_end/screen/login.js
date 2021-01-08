@@ -1,34 +1,88 @@
-import {Container, Text,Header, Content, Body, Right, Left, Button, Form, Item, Label, Input, Picker} from 'native-base';
+import {Container, Text,Header, Content, Card, Body, Right, Left, Button, Form, Item, Label, Input, Picker, CardItem} from 'native-base';
 import React, {Component} from 'react';
-import { StyleSheet, View, TextInput} from 'react-native';
+import { StyleSheet, View, TextInput, Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 //import { TextInput } from 'react-native-gesture-handler';
 
 class Login extends Component {
+    constructor(props){
+        super(props);
+        this.state={
+            username: '',
+            password: ''
+        }
+    }
     render(){
         return(
-            <Container style = {styles.main}>
-                <View style = {{justifyContent: 'center', flexDirection: 'row'}}>
-                    <Icon name='won-sign' color='white' size = {30} style={{padding: 10}}></Icon>
-                    <Text style = {{fontSize: 25,fontWeight: 'bold', color: '#ffffff'}}>Financial Management App</Text>
+            <Container>
+                <View style = {{justifyContent: 'center',height: '20%', alignItems: 'center', alignContent: 'center'}}>
+                    <Icon name = 'accusoft' color= '#23596e' size={30} style = {{padding: 5}}></Icon>
+                    <Text style = {{fontFamily: 'Roboto', fontSize: 25,fontWeight: 'bold', color: '#23596e'}}>Financial Management App</Text>
                 </View>
-                <View style = {{justifyContent: 'center'}}>
-                    <View style = {{alignContent: 'center', alignItems: 'center'}}>
+                <View style = {styles.main}>
+                    <View style = {{alignContent: 'center', alignItems: 'center', marginBottom: 20}}>
                         <Text style = {styles.text}>LOGIN</Text>
                     </View>
-                    <Form style = {{width: 200}}>
-                        <Item>
-                            <Label style = {styles.text}>Username</Label>
-                            <TextInput style = {{color: 'white', width: 100}}></TextInput>
-                        </Item>
-                        <Item>
-                            <Label style = {styles.text}>Password</Label>
-                            <TextInput secureTextEntry = {true} style={{color: 'white', width: 100}} ></TextInput>
-                        </Item>
-                    </Form>
+                    <View>
+                        <Form style = {{width: 300}}>
+                            <Card>
+                                <CardItem style = {{backgroundColor: '#23596e'}}>
+                                <TextInput onChangeText = {(text) => this.setState({username: text})}
+                                 placeholder={'Username'} placeholderTextColor={"#e1e9f5"} style = {{color: 'white', width: 250}}></TextInput>
+                                </CardItem>
+                            </Card>
+                            <Card>
+                            <CardItem style = {{backgroundColor: '#23596e'}}>
+                                <TextInput onChangeText = {(text) => this.setState({password: text})}
+                                placeholder={'Password'} placeholderTextColor={"#e1e9f5"} secureTextEntry = {true} style={{color: 'white', width: 250}} ></TextInput>
+                            </CardItem>
+                            </Card>
+                        </Form>
+                        <Button style = {{width: 300}} onPress={() => this.login()}>
+                            <View style = {{alignContent: 'center', alignItems: 'center',width: 300}}>
+                                <Text style={styles.text}>Login</Text>
+                            </View>
+                        </Button>
+                    </View>
+                    <View style={{margin: 10}}>
+                        <Text style = {styles.text}>OR</Text>
+                    </View>
+                    <View>
+                        <Button style = {{width: 300}}>
+                            <View style = {{alignContent: 'center', alignItems: 'center',width: 300}}>
+                                <Text style = {styles.text}>Create new account</Text>
+                            </View>
+                        </Button>
+                    </View>
                 </View>
             </Container>
         )
+    }
+
+    async login(){
+        if(this.state.username == '' || this.state.password == ''){
+            alert('Enter username and password');
+        }
+        else{ 
+            let res = await fetch('http://10.0.2.2:5000/login/' + this.state.username + '/' + this.state.password);
+            let data = await res.json();
+            if(data.length!=0){
+                console.log('OK');
+                this.props.navigation.navigate('main_screen', {
+                    userid: data[0].userid,
+                })
+            }
+            else{
+                alert('Wrong username or password');
+            }
+        }
+    }
+
+    async componentDidMount(){
+        this.setState({
+            username: '',
+            password: ''
+        })
     }
 }
 

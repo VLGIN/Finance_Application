@@ -15,6 +15,17 @@ router.get('/get/user', async(req, res, next) => {
 
 });
 
+router.get('/login/:username/:password', async(req, res, next) => {
+    try{
+        let results = await db.login(req.params.username, req.params.password);
+        res.json(results);
+    }
+    catch(e){
+        console.log(e);
+        res.sendStatus(500);        
+    }
+})
+
 router.get('/get/user/:id', async(req, res, next) => {
     try{
         let results = await db.get_one(req.params.id);

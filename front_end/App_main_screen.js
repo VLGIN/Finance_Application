@@ -1,21 +1,38 @@
 import React, {Component} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {createDrawerNavigator} from '@react-navigation/drawer'
+import {createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList} from '@react-navigation/drawer'
 import AccountSetting from './screen/AccountSetting'
 import Category from './screen/Category'
 import App1 from './App1';
 import Iconicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { roundToNearestPixel } from 'react-native/Libraries/Utilities/PixelRatio';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
+const userid = route.params.userid;
 export default class App_main_screen extends Component {
+  constructor(props){
+    super(props);
+    const userid = this.props.route.params.userid;
+  }
+
+  componentDidMount(){
+    console.log(this.props.userid);
+  }
 
   render() {
     return(
-    <NavigationContainer>
-      <Drawer.Navigator initialRouteName="App1">
+    <NavigationContainer independent={true}>
+      <Drawer.Navigator initialRouteName="App1" drawerContent={props => {
+    return (
+      <DrawerContentScrollView {...props}>
+        <DrawerItemList {...props} />
+        <DrawerItem label="Logout" onPress={() => this.props.navigation.navigate("Login")} />
+      </DrawerContentScrollView>
+    )
+  }}> 
         <Drawer.Screen name= "Home" component={App1}
           options={{
             drawerIcon: config => <Icon name ="home" size = {20} color = "#23596e">

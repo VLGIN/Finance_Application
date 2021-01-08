@@ -23,6 +23,17 @@ appdb.setup = () => {
     })
 };
 
+appdb.login = (account, password) => {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT iduser FROM user where account = ? and pass = ?;', [account, password], (err, results) => {
+            if(err){
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
 appdb.get_all = () => {
     return new Promise((resolve, reject) =>{
         pool.query('SELECT * FROM user', (err, results) => {
