@@ -11,15 +11,9 @@ import { roundToNearestPixel } from 'react-native/Libraries/Utilities/PixelRatio
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
-const userid = route.params.userid;
 export default class App_main_screen extends Component {
   constructor(props){
     super(props);
-    const userid = this.props.route.params.userid;
-  }
-
-  componentDidMount(){
-    console.log(this.props.userid);
   }
 
   render() {
@@ -32,7 +26,7 @@ export default class App_main_screen extends Component {
         <DrawerItem label="Logout" onPress={() => this.props.navigation.navigate("Login")} />
       </DrawerContentScrollView>
     )
-  }}> 
+  }} initialRouteName = 'Home'> 
         <Drawer.Screen name= "Home" component={App1}
           options={{
             drawerIcon: config => <Icon name ="home" size = {20} color = "#23596e">

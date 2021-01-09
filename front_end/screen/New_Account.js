@@ -4,7 +4,7 @@ import { StyleSheet, View, TextInput, Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 //import { TextInput } from 'react-native-gesture-handler';
 
-class Login extends Component {
+class New_Account extends Component {
     constructor(props){
         super(props);
         this.state={
@@ -15,14 +15,11 @@ class Login extends Component {
     render(){
         return(
             <Container>
-                <View style = {{justifyContent: 'center',height: '20%', alignItems: 'center', alignContent: 'center'}}>
-                    <Icon name = 'accusoft' color= '#23596e' size={30} style = {{padding: 5}}></Icon>
-                    <Text style = {{fontFamily: 'Roboto', fontSize: 25,fontWeight: 'bold', color: '#23596e'}}>Financial Management App</Text>
+                <View style = {{backgroundColor: '#23596e', justifyContent: 'center',height: '20%', alignItems: 'center', alignContent: 'center'}}>
+                    <Icon name = 'accusoft' color= 'white' size={30} style = {{padding: 5}}></Icon>
+                    <Text style = {{fontFamily: 'Roboto', fontSize: 25,fontWeight: 'bold', color: 'white'}}>Financial Management App</Text>
                 </View>
                 <View style = {styles.main}>
-                    <View style = {{alignContent: 'center', alignItems: 'center', marginBottom: 20}}>
-                        <Text style = {styles.text}>LOGIN</Text>
-                    </View>
                     <View>
                         <Form style = {{width: 300}}>
                             <Card>
@@ -37,20 +34,30 @@ class Login extends Component {
                                 placeholder={'Password'} placeholderTextColor={"#e1e9f5"} secureTextEntry = {true} style={{color: 'white', width: 250}} ></TextInput>
                             </CardItem>
                             </Card>
+                            <Card>
+                                <CardItem style = {{backgroundColor: '#23596e'}}>
+                                <TextInput onChangeText = {(text) => this.setState({username: text})}
+                                 placeholder={'Retype your password'} placeholderTextColor={"#e1e9f5"} secureTextEntry = {true} style = {{color: 'white', width: 250}}></TextInput>
+                                </CardItem>
+                            </Card>
+                            <Card>
+                                <CardItem style = {{backgroundColor: '#23596e'}}>
+                                <TextInput onChangeText = {(text) => this.setState({username: text})}
+                                 keyboardType = {'numeric'} placeholder={'Balance'} placeholderTextColor={"#e1e9f5"} style = {{color: 'white', width: 200}}></TextInput>
+                                 <Text style = {{color: 'white'}}>VND</Text>
+                                </CardItem>
+                            </Card>
                         </Form>
-                        <Button style = {{width: 300}} onPress={() => this.login()}>
-                            <View style = {{alignContent: 'center', alignItems: 'center',width: 300}}>
-                                <Text style={styles.text}>Login</Text>
+                    </View>
+                    <View style = {{flexDirection: 'row'}}>
+                        <Button style = {{width: 140, margin: 5}}>
+                            <View style = {{alignContent: 'center', alignItems: 'center',width: 140}}>
+                                <Text style={styles.text}>OK</Text>
                             </View>
                         </Button>
-                    </View>
-                    <View style={{margin: 10}}>
-                        <Text style = {styles.text}>OR</Text>
-                    </View>
-                    <View>
-                        <Button style = {{width: 300}} onPress = {() => {this.props.navigation.navigate('Create_account')}}>
-                            <View style = {{alignContent: 'center', alignItems: 'center',width: 300}}>
-                                <Text style = {styles.text}>Create new account</Text>
+                        <Button style = {{width: 140, margin: 5}} onPress={() => this.login()}>
+                            <View style = {{alignContent: 'center', alignItems: 'center',width: 140}}>
+                                <Text style = {styles.text}>Login</Text>
                             </View>
                         </Button>
                     </View>
@@ -60,7 +67,8 @@ class Login extends Component {
     }
 
     async login(){
-        if(this.state.username == '' || this.state.password == ''){
+        this.props.navigation.navigate('Login')
+        /* if(this.state.username == '' || this.state.password == ''){
             alert('Enter username and password');
         }
         else{ 
@@ -69,17 +77,13 @@ class Login extends Component {
             if(data.length!=0){
                 console.log('OK');
                 this.props.navigation.navigate('main_screen', {
-                    screen: 'Home',
-
-                    params: {
-                            userid: data[0].iduser
-                    },
+                    userid: data[0].iduser,
                 })
             }
             else{
                 alert('Wrong username or password');
             }
-        }
+        } */
     }
 
     async componentDidMount(){
@@ -92,7 +96,7 @@ class Login extends Component {
 
 const styles = StyleSheet.create({
     main: {
-        backgroundColor: '#23596e',
+        backgroundColor: 'white',
         alignContent: 'center',
         alignItems: 'center',
         flex: 1,
@@ -106,4 +110,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Login;
+export default New_Account;

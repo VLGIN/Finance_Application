@@ -391,7 +391,6 @@ class Home extends Component{
     }
 
     async componentDidMount(){
-        console.log(this.props.userid);
         let response = await fetch("http://10.0.2.2:5000/get/user/1")
         let data = await response.json();
         this.setState({

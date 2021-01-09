@@ -12,7 +12,7 @@ import {Body, Container, Header, Left, Text} from 'native-base';
 import Statistic from './screen/Statistic';
 
 const Tab = createBottomTabNavigator();
-export default class App1 extends Component {
+class App1 extends Component {
     constructor(props){
         super(props);
     }
@@ -36,22 +36,27 @@ export default class App1 extends Component {
                 activeBackgroundColor: '#43a0c4',
                 inactiveBackgroundColor: '#23596e',
           }}
+          initialRouteName = 'Home'
         >
           <Tab.Screen name="Home" component={Home} options = {{
             tabBarLabel: 'Home',
-            tabBarIcon: () => (<Iconicons name = 'home'size = {20} color = '#ffffff'/>)
+            tabBarIcon: () => (<Iconicons name = 'home'size = {20} color = '#ffffff'/>),
+            unmountOnBlur: false
           }}/>
           <Tab.Screen name = "Statistic" component={Statistic} options = {{
             tabBarLabel: 'Statistic',
-            tabBarIcon: () => (<Iconicons name = 'bar-chart'size = {20} color = '#ffffff'/>)
+            tabBarIcon: () => (<Iconicons name = 'bar-chart'size = {20} color = '#ffffff'/>),
+            unmountOnBlur: true
           }} />
           <Tab.Screen name = "Plan" component = {Plan} options = {{
             tabBarLabel: 'Plan',
-            tabBarIcon: () => (<Icon name = 'clipboard-list' size = {20} color = '#ffffff'/>)
+            tabBarIcon: () => (<Icon name = 'clipboard-list' size = {20} color = '#ffffff'/>),
+            unmountOnBlur: true
           }} />
           <Tab.Screen name = "History" component = {History} options = {{
             tabBarLabel: 'History',
-            tabBarIcon: () => (<Icon name = 'history' size = {20} color = '#ffffff'/>)
+            tabBarIcon: () => (<Icon name = 'history' size = {20} color = '#ffffff'/>),
+            unmountOnBlur: true
           }} />
         </Tab.Navigator>
       </NavigationContainer>
@@ -59,3 +64,5 @@ export default class App1 extends Component {
     )
   }
 }
+
+export default App1;
