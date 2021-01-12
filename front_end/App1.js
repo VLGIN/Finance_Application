@@ -42,22 +42,30 @@ class App1 extends Component {
             tabBarLabel: 'Home',
             tabBarIcon: () => (<Iconicons name = 'home'size = {20} color = '#ffffff'/>),
             unmountOnBlur: false
-          }}/>
+          }}
+            initialParams={{"userid": this.props.route.params.userid}}
+          />
           <Tab.Screen name = "Statistic" component={Statistic} options = {{
             tabBarLabel: 'Statistic',
             tabBarIcon: () => (<Iconicons name = 'bar-chart'size = {20} color = '#ffffff'/>),
             unmountOnBlur: true
-          }} />
+          }}
+          initialParams={{"userid": this.props.route.params.userid}}
+          />
           <Tab.Screen name = "Plan" component = {Plan} options = {{
             tabBarLabel: 'Plan',
             tabBarIcon: () => (<Icon name = 'clipboard-list' size = {20} color = '#ffffff'/>),
             unmountOnBlur: true
-          }} />
+          }}
+          initialParams={{"userid": this.props.route.params.userid}}
+          />
           <Tab.Screen name = "History" component = {History} options = {{
             tabBarLabel: 'History',
             tabBarIcon: () => (<Icon name = 'history' size = {20} color = '#ffffff'/>),
             unmountOnBlur: true
-          }} />
+          }} 
+          initialParams={{"userid": this.props.route.params.userid}}
+          />
         </Tab.Navigator>
       </NavigationContainer>
     </Container>

@@ -154,14 +154,14 @@ class Statistic_per_month extends Component{
             data: [0,0,0,0,0,0,0,0,0,0,0,0],
             data_income: [0,0,0,0,0,0,0,0,0,0,0,0]
         })
-        let res = await fetch('http://10.0.2.2:5000/spending/per/month/' + value.toString());
+        let res = await fetch('http://10.0.2.2:5000/spending/per/month/' + value.toString() + '/' + this.props.userid);
         let spending_month = await res.json();
         for(let i = 0; i<spending_month.length; i++){
             this.state.data[spending_month[i].month - 1]= spending_month[i].value / 1000;
         }
 
 
-        let res2 = await fetch('http://10.0.2.2:5000/income/per/month/' + value.toString());
+        let res2 = await fetch('http://10.0.2.2:5000/income/per/month/' + value.toString() + '/' + this.props.userid);
         let income_month = await res2.json();
         for (let i = 0; i<income_month.length; i++){
             this.state.data_income[income_month[i].month - 1] = income_month[i].value / 1000;
@@ -200,20 +200,20 @@ class Statistic_per_month extends Component{
 
     async componentDidMount(){
         let cur_year = new Date().getFullYear();
-        let res = await fetch('http://10.0.2.2:5000/spending/per/month/' + cur_year.toString());
+        let res = await fetch('http://10.0.2.2:5000/spending/per/month/' + cur_year.toString() + '/' + this.props.userid);
         let spending_month = await res.json();
         for(let i = 0; i<spending_month.length; i++){
             this.state.data[spending_month[i].month - 1]= spending_month[i].value / 1000;
         }
 
 
-        let res2 = await fetch('http://10.0.2.2:5000/income/per/month/' + cur_year.toString());
+        let res2 = await fetch('http://10.0.2.2:5000/income/per/month/' + cur_year.toString() + '/' + this.props.userid);
         let income_month = await res2.json();
         for (let i = 0; i<income_month.length; i++){
             this.state.data_income[income_month[i].month - 1] = income_month[i].value / 1000;
         }
         
-        let response = await fetch('http://10.0.2.2:5000/get/year');
+        let response = await fetch('http://10.0.2.2:5000/get/year/' + this.props.userid);
         let year_list = await response.json();
         let data_first = {
             labels: ["Jan", "Feb", "Mar", "Apr", "M", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],

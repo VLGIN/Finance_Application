@@ -20,20 +20,21 @@ class Login extends Component {
                     <Text style = {{fontFamily: 'Roboto', fontSize: 25,fontWeight: 'bold', color: '#23596e'}}>Financial Management App</Text>
                 </View>
                 <View style = {styles.main}>
-                    <View style = {{alignContent: 'center', alignItems: 'center', marginBottom: 20}}>
-                        <Text style = {styles.text}>LOGIN</Text>
-                    </View>
                     <View>
                         <Form style = {{width: 300}}>
                             <Card>
                                 <CardItem style = {{backgroundColor: '#23596e'}}>
-                                <TextInput onChangeText = {(text) => this.setState({username: text})}
+                                <TextInput
+                                value = {this.state.username} 
+                                onChangeText = {(text) => this.setState({username: text})}
                                  placeholder={'Username'} placeholderTextColor={"#e1e9f5"} style = {{color: 'white', width: 250}}></TextInput>
                                 </CardItem>
                             </Card>
                             <Card>
                             <CardItem style = {{backgroundColor: '#23596e'}}>
-                                <TextInput onChangeText = {(text) => this.setState({password: text})}
+                                <TextInput
+                                value = {this.state.password} 
+                                onChangeText = {(text) => this.setState({password: text})}
                                 placeholder={'Password'} placeholderTextColor={"#e1e9f5"} secureTextEntry = {true} style={{color: 'white', width: 250}} ></TextInput>
                             </CardItem>
                             </Card>
@@ -48,7 +49,7 @@ class Login extends Component {
                         <Text style = {styles.text}>OR</Text>
                     </View>
                     <View>
-                        <Button style = {{width: 300}} onPress = {() => {this.props.navigation.navigate('Create_account')}}>
+                        <Button style = {{width: 300}} onPress = {() => this.create_new_account()}>
                             <View style = {{alignContent: 'center', alignItems: 'center',width: 300}}>
                                 <Text style = {styles.text}>Create new account</Text>
                             </View>
@@ -59,6 +60,14 @@ class Login extends Component {
         )
     }
 
+    async create_new_account(){
+        this.setState({
+            username:  '',
+            password: ''
+        })
+        this.props.navigation.navigate('Create_account')
+    }
+
     async login(){
         if(this.state.username == '' || this.state.password == ''){
             alert('Enter username and password');
@@ -67,14 +76,11 @@ class Login extends Component {
             let res = await fetch('http://10.0.2.2:5000/login/' + this.state.username + '/' + this.state.password);
             let data = await res.json();
             if(data.length!=0){
-                console.log('OK');
-                this.props.navigation.navigate('main_screen', {
-                    screen: 'Home',
-
-                    params: {
-                            userid: data[0].iduser
-                    },
+                this.setState({
+                    username:  '',
+                    password: ''
                 })
+                this.props.navigation.navigate('main_screen', {userid: data[0].iduser})
             }
             else{
                 alert('Wrong username or password');

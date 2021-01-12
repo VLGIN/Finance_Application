@@ -3,6 +3,20 @@ const db = require('../db');
 
 const router = express.Router();
 
+router.post('/add/user', async(req, res, next) =>{
+    try{
+        let account = req.body.account;
+        let pass = req.body.pass;
+        let balance = req.body.balance;
+        let results = await db.add_user(account, pass, balance);
+        res.redirect('/login/' + account + '/' + pass);
+    }
+    catch(err){
+        console.log(err);
+        res.sendStatus(500);
+    }
+})
+
 router.get('/get/user', async(req, res, next) => {
     try{
         let results = await db.get_all();
@@ -49,9 +63,9 @@ router.get('/get/category/:type', async(req, res, next)=>{
     }
 })
 
-router.get('/get/spending/:cate', async(req, res, next) => {
+router.get('/get/spending/:cate/:userid', async(req, res, next) => {
     try{
-        let results = await db.get_spending_cate(req.params.cate);
+        let results = await db.get_spending_cate(req.params.cate, req.params.userid);
         res.json(results);
     }
     catch(e){
@@ -82,9 +96,9 @@ router.get('/get/income', async(req, res, next) => {
     }
 })
 
-router.get('/get/limitation', async(req, res, next) => {
+router.get('/get/limitation/:userid', async(req, res, next) => {
     try{
-        let results = await db.get_limitation();
+        let results = await db.get_limitation(req.params.userid);
         res.json(results);
     }
     catch(e){
@@ -93,9 +107,9 @@ router.get('/get/limitation', async(req, res, next) => {
     }
 })
 
-router.get('/get/year', async(req, res, next) => {
+router.get('/get/year/:userid', async(req, res, next) => {
     try{
-        let results = await db.get_year();
+        let results = await db.get_year(req.params.userid);
         res.json(results);
     }
     catch(e){
@@ -138,7 +152,8 @@ router.post('/post/limitation', async(req, res, next) => {
     try{
         let categoryid = req.body.categoryid;
         let max = req.body.max;
-        await db.add_limitation(categoryid, max);
+        let userid = req.body.userid;
+        await db.add_limitation(categoryid, max, userid);
         res.redirect('/get/limitation');
     }
     catch(e){
@@ -152,8 +167,9 @@ router.post('/update/limitation', async(req, res, next) => {
         let categoryid = req.body.categoryid;
         let value = req.body.value;
         let date = req.body.date;
+        let userid = req.body.userid;
         console.log(categoryid);
-        await db.update_limitation(categoryid, value, date);
+        await db.update_limitation(categoryid, value, date, userid);
         res.redirect('/get/limitation');
     }
     catch(e){
@@ -229,7 +245,8 @@ router.post('/delete/income', async(req, res, next) => {
 router.post('/delete/limitation', async(req, res, next) => {
     try{
         let id = req.body.categoryid;
-        await db.delete_limitation(id);
+        let userid = req.body.userid;
+        await db.delete_limitation(id, userid);
         res.redirect('/get/limitation');
     }
     catch(e){
@@ -252,9 +269,9 @@ router.post('/add/category', async(req, res, next) => {
     }
 })
 
-router.get('/spending/per/month/:year', async(req, res, next) => {
+router.get('/spending/per/month/:year/:userid', async(req, res, next) => {
     try{
-        let result = await db.get_spending_permonth(req.params.year);
+        let result = await db.get_spending_permonth(req.params.year, req.params.userid);
         res.json(result);
     }
     catch(e){
@@ -263,9 +280,9 @@ router.get('/spending/per/month/:year', async(req, res, next) => {
     }
 })
 
-router.get('/income/per/month/:year', async(req, res, next) => {
+router.get('/income/per/month/:year/:userid', async(req, res, next) => {
     try{
-        let result = await db.get_income_permonth(req.params.year);
+        let result = await db.get_income_permonth(req.params.year, req.params.userid);
         res.json(result);
     }
     catch(e){
@@ -274,9 +291,9 @@ router.get('/income/per/month/:year', async(req, res, next) => {
     }
 })
 
-router.get('/spending/per/cate/:year', async(req, res, next) => {
+router.get('/spending/per/cate/:year/:userid', async(req, res, next) => {
     try{
-        let result = await db.get_spending_percate(req.params.year);
+        let result = await db.get_spending_percate(req.params.year, req.params.userid);
         res.json(result);
     }
     catch(e){
@@ -285,9 +302,9 @@ router.get('/spending/per/cate/:year', async(req, res, next) => {
     }
 })
 
-router.get('/income/per/cate/:year', async(req, res, next) => {
+router.get('/income/per/cate/:year/:userid', async(req, res, next) => {
     try{
-        let result = await db.get_income_percate(req.params.year);
+        let result = await db.get_income_percate(req.params.year, req.params.userid);
         res.json(result);
     }
     catch(e){
@@ -296,10 +313,11 @@ router.get('/income/per/cate/:year', async(req, res, next) => {
     }
 })
 
-router.get('/spending/type/:type', async(req, res, next) => {
+router.get('/spending/type/:type/:userid', async(req, res, next) => {
     try{
         let type = req.params.type;
-        let result = await db.get_spending_type(type);
+        let userid = req.params.userid;
+        let result = await db.get_spending_type(type, userid);
         res.json(result);
     }
     catch(e){
@@ -308,9 +326,9 @@ router.get('/spending/type/:type', async(req, res, next) => {
     }
 })
 
-router.get('/income/type/:type', async(req, res, next) => {
+router.get('/income/type/:type/:userid', async(req, res, next) => {
     try{
-        let result = await db.get_income_type(req.params.type);
+        let result = await db.get_income_type(req.params.type, req.params.userid);
         res.json(result);
     }
     catch(e){

@@ -36,7 +36,7 @@ appdb.login = (account, password) => {
 
 appdb.get_all = () => {
     return new Promise((resolve, reject) =>{
-        pool.query('SELECT * FROM user', (err, results) => {
+        pool.query('SELECT account FROM user', (err, results) => {
             if(err) {
                 return reject(err);
             }
@@ -45,6 +45,18 @@ appdb.get_all = () => {
         });
     })
 };
+
+appdb.add_user = (account, pass, balance) => {
+    return new Promise((resolve, reject) => {
+        pool.query('insert into user (account, pass, balance) values (?,?,?);', [account, pass, balance], (err, results) => {
+            if(err){
+                return reject(err);
+            }
+
+            return resolve(results);
+        })
+    })
+}
 
 appdb.get_one = (id) => {
     return new Promise((resolve, reject) =>{
@@ -80,9 +92,9 @@ appdb.get_spending = () => {
     })
 };
 
-appdb.get_spending_type = (type) => {
+appdb.get_spending_type = (type, userid) => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT spending.value, spending.idspending, spending.type, DATE_FORMAT(spending.date, "%d-%m-%Y") AS Date, category.name FROM spending INNER JOIN category ON spending.categoryid = category.idcategory where spending.type = ?;', [type], (err,results) => {
+        pool.query('SELECT spending.value, spending.idspending, spending.type, DATE_FORMAT(spending.date, "%d-%m-%Y") AS Date, category.name FROM spending INNER JOIN category ON spending.categoryid = category.idcategory where spending.type = ? and spending.userid = ?;', [type, userid], (err,results) => {
             if(err){
                 return reject(err);
             }
@@ -91,9 +103,9 @@ appdb.get_spending_type = (type) => {
     })
 }
 
-appdb.get_income_type = (type) => {
+appdb.get_income_type = (type, userid) => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT income.value, income.idincome, income.type, DATE_FORMAT(income.date, "%d-%m-%Y") AS Date, category.name FROM income INNER JOIN category ON income.categoryid = category.idcategory where income.type = ? ORDER BY Date;', [type], (err, results) => {
+        pool.query('SELECT income.value, income.idincome, income.type, DATE_FORMAT(income.date, "%d-%m-%Y") AS Date, category.name FROM income INNER JOIN category ON income.categoryid = category.idcategory where income.type = ? and income.userid = ? ORDER BY Date;', [type, userid], (err, results) => {
             if(err){
                 return reject(err);
             }
@@ -102,9 +114,9 @@ appdb.get_income_type = (type) => {
     })
 }
 
-appdb.get_spending_cate = (cate) => {
+appdb.get_spending_cate = (cate,userid) => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT spending.categoryid, spending.value, spending.idspending, spending.type, DATE_FORMAT(spending.date, "%d-%m-%Y") AS Date, category.name FROM spending INNER JOIN category ON spending.categoryid = category.idcategory WHERE category.idcategory = ? and month(date) = month(curdate()) ORDER BY Date DESC', [cate], (err, results) => {
+        pool.query('SELECT spending.categoryid, spending.value, spending.idspending, spending.type, DATE_FORMAT(spending.date, "%d-%m-%Y") AS Date, category.name FROM spending INNER JOIN category ON spending.categoryid = category.idcategory WHERE category.idcategory = ? and month(date) = month(curdate()) and spending.userid = ? ORDER BY Date DESC', [cate, userid], (err, results) => {
             if(err){
                 return reject(err);
             }
@@ -113,9 +125,9 @@ appdb.get_spending_cate = (cate) => {
     })
 };
 
-appdb.get_year = () => {
+appdb.get_year = (userid) => {
     return new Promise((resolve, reject) => {
-        pool.query('(SELECT DISTINCT YEAR(date) AS YEAR from spending) union (SELECT DISTINCT YEAR(date) AS YEAR from income) ORDER BY YEAR DESC;', (err, results) =>{
+        pool.query('(SELECT DISTINCT YEAR(date) AS YEAR from spending where userid = ?) union (SELECT DISTINCT YEAR(date) AS YEAR from income where userid = ?) ORDER BY YEAR DESC;',[userid, userid], (err, results) =>{
             if(err){
                 return reject(err);
             }
@@ -135,9 +147,9 @@ appdb.get_income = () => {
     })
 };
 
-appdb.get_limitation = () => {
+appdb.get_limitation = (userid) => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT limitation.*, name FROM limitation INNER JOIN category ON limitation.categoryid = category.idcategory', (err, results) => {
+        pool.query('SELECT limitation.*, name FROM limitation INNER JOIN category ON limitation.categoryid = category.idcategory where limitation.userid = ?',[userid] , (err, results) => {
             if(err){
                 return reject(ree);
             }
@@ -211,9 +223,9 @@ appdb.delete_spending = (id) => {
     })
 }
 
-appdb.delete_limitation = (id) => {
+appdb.delete_limitation = (id, userid) => {
     return new Promise((resolve, reject) => {
-        pool.query('DELETE FROM limitation WHERE categoryid = ?', [id], (err, results) => {
+        pool.query('DELETE FROM limitation WHERE categoryid = ? and userid = ?', [id, userid], (err, results) => {
             if(err){
                 return reject(err);
             }
@@ -222,9 +234,9 @@ appdb.delete_limitation = (id) => {
     })
 }
 
-appdb.add_limitation = (categoryid, max) => {
+appdb.add_limitation = (categoryid, max, userid) => {
     return new Promise((resolve, reject)=>{
-        pool.query('call add_limitation(?,?);', [categoryid, max], (err, results) =>{
+        pool.query('call add_limitation(?,?,?);', [categoryid, max, userid], (err, results) =>{
             if(err){
                 return reject(err);
             }
@@ -233,9 +245,9 @@ appdb.add_limitation = (categoryid, max) => {
     })
 }
 
-appdb.update_limitation = (categoryid, value, date) => {
+appdb.update_limitation = (categoryid, value, date, userid) => {
     return new Promise ((resolve, reject) => {
-        pool.query("call update_limitation(?,?, ?);", [categoryid, value, date], (err, results) => {
+        pool.query("call update_limitation(?,?, ?, ?);", [categoryid, value, date, userid], (err, results) => {
             if(err){
                 return reject(err);
             }
@@ -268,9 +280,9 @@ appdb.delete_category = (id) => {
 }
 
 
-appdb.get_spending_permonth = (year) => {
+appdb.get_spending_permonth = (year,userid) => {
     return new Promise((resolve, reject) => {
-        pool.query('select sum(value) as value, month(date) as month from spending where year(date) = ? group by month(date);', [year], (err, results) => {
+        pool.query('select sum(value) as value, month(date) as month from spending where year(date) = ? and userid = ? group by month(date);', [year, userid], (err, results) => {
             if(err){
                 return reject(err);
             }
@@ -279,9 +291,9 @@ appdb.get_spending_permonth = (year) => {
     })
 }
 
-appdb.get_income_permonth = (year) => {
+appdb.get_income_permonth = (year, userid) => {
     return new Promise((resolve, reject) => {
-        pool.query('select sum(value) as value, month(date) as month from income where year(date) = ? group by month(date);', [year], (err, results) => {
+        pool.query('select sum(value) as value, month(date) as month from income where year(date) = ? and userid = ? group by month(date);', [year, userid], (err, results) => {
             if(err){
                 return reject(err);
             }
@@ -290,9 +302,9 @@ appdb.get_income_permonth = (year) => {
     })
 }
 
-appdb.get_spending_percate = (year) => {
+appdb.get_spending_percate = (year, userid) => {
     return new Promise((resolve, reject) => {
-        pool.query("select sum(value) as value, name from spending inner join category on spending.categoryid = category.idcategory where year(date) = ? group by name;", [year],(err, results) => {
+        pool.query("select sum(value) as value, name from spending inner join category on spending.categoryid = category.idcategory where year(date) = ? and spending.userid = ? group by name;", [year, userid],(err, results) => {
             if(err){
                 return reject(err);
             }
@@ -301,9 +313,9 @@ appdb.get_spending_percate = (year) => {
     })
 }
 
-appdb.get_income_percate = (year) => {
+appdb.get_income_percate = (year, userid) => {
     return new Promise((resolve, reject) => {
-        pool.query("select sum(value) as value, name from income inner join category on income.categoryid = category.idcategory where year(date) = ? group by name;",[year] ,(err, results) => {
+        pool.query("select sum(value) as value, name from income inner join category on income.categoryid = category.idcategory where year(date) = ? and income.userid = ? group by name;",[year, userid] ,(err, results) => {
             if(err){
                 return reject(err);
             }

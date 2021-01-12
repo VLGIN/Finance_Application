@@ -15,18 +15,15 @@ class Home extends Component{
         <Container>
             <Tabs>
                 <Tab heading={ <TabHeading style = {{backgroundColor: "#327e9c"}}><Icon name="wallet" size= {20} color = '#ffffff'/><Text style = {{fontWeight: 'bold'}}>Spending</Text></TabHeading>}>
-                    <ShowSpending />
+                    <ShowSpending userid = {this.props.route.params.userid} />
                 </Tab>
                 <Tab heading={ <TabHeading style = {{backgroundColor: "#327e9c"}}><Icon name = 'money-check-alt' size = {20} color = "#ffffff"/><Text style = {{fontWeight: 'bold'}}>Income</Text></TabHeading>}>
-                    <ShowIncome />
+                    <ShowIncome userid = {this.props.route.params.userid} />
                 </Tab>
             </Tabs>
         </Container>
         )
             
-    }
-
-    async componentDidMount(){
     }
 
 }

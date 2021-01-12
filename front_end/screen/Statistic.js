@@ -15,10 +15,10 @@ class Statistic extends Component{
             <Container>
                 <Tabs>
                     <Tab heading={ <TabHeading style = {{backgroundColor: "#327e9c"}}><Text style = {{fontWeight: 'bold'}}>Per Month</Text></TabHeading>}>
-                        <Statistic_per_month />
+                        <Statistic_per_month  userid = {this.props.route.params.userid}/>
                     </Tab>
                     <Tab heading={ <TabHeading style = {{backgroundColor: "#327e9c"}}><Text style = {{fontWeight: 'bold'}}>Per Category</Text></TabHeading>}>
-                        <Statistic_per_cate />
+                        <Statistic_per_cate userid = {this.props.route.params.userid}/>
                     </Tab>
                 </Tabs>
             </Container>

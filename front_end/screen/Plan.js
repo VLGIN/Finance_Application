@@ -186,10 +186,11 @@ class Plan extends Component{
 
                 body: JSON.stringify({
                     "categoryid": this.state.category_selected,
-                    "max": this.state.new_max
+                    "max": this.state.new_max,
+                    "userid": this.props.route.params.userid
                 })
             })
-            let res = await fetch('http://10.0.2.2:5000/get/limitation');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+            let res = await fetch('http://10.0.2.2:5000/get/limitation/' + this.props.route.params.userid);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
             let data = await res.json();
             this.setState({
                 limitation: data,
@@ -212,7 +213,8 @@ class Plan extends Component{
             },
 
             body: JSON.stringify({
-                "categoryid": id
+                "categoryid": id,
+                "userid": this.props.route.params.userid
             })
         })
         let remove = this.state.limitation.indexOf(this.state.limitation.find(element => element.categoryid == id))
@@ -224,7 +226,7 @@ class Plan extends Component{
         this.setState({
             show_hist: true
         });
-        let response = await fetch('http://10.0.2.2:5000/get/spending/' + id.toString());
+        let response = await fetch('http://10.0.2.2:5000/get/spending/' + id.toString() + '/' + this.props.route.params.userid);
         let data = await response.json();
         this.setState({
             hist_list: data
@@ -234,7 +236,7 @@ class Plan extends Component{
     }
 
     async componentDidMount(){
-        let res = await fetch('http://10.0.2.2:5000/get/limitation');
+        let res = await fetch('http://10.0.2.2:5000/get/limitation/' + this.props.route.params.userid);
         let data = await res.json();
         this.setState({
             limitation: data

@@ -240,7 +240,7 @@ class Home extends Component{
 
             body: JSON.stringify({
                 "name": this.state.new_category,
-                "type": type
+                "type": type,
             })
         })
         let data = await response.json()
@@ -300,7 +300,7 @@ class Home extends Component{
                     "value": this.state.income_value,
                     "date": moment(this.state.income_date).format("YYYY-MM-DD"),
                     "type": this.state.income_type_selected,
-                    "userid": 1
+                    "userid": this.props.route.params.userid
                 })
             })
 
@@ -321,7 +321,7 @@ class Home extends Component{
 
                 body: JSON.stringify({
                     "value": this.state.balance,
-                    "id": 1
+                    "id": this.props.route.params.userid
                 })
             })
             await this.setState({add_income: false})
@@ -346,7 +346,7 @@ class Home extends Component{
                     "value": this.state.spending_value,
                     "date": moment(this.state.spending_date).format("YYYY-MM-DD"),
                     "type": this.state.spending_type_selected,
-                    "userid": 1
+                    "userid": this.props.route.params.userid
                 })
             })
             await fetch('http://10.0.2.2:5000/update/limitation',{
@@ -361,6 +361,7 @@ class Home extends Component{
                     "value": this.state.spending_value,
                     "categoryid": this.state.spending_category_selected,
                     "date": moment(this.state.spending_date).format("YYYY-MM-DD"),
+                    "userid": this.props.route.params.userid
                 })
             })
             await this.setState({
@@ -380,7 +381,7 @@ class Home extends Component{
 
                 body: JSON.stringify({
                     "value": this.state.balance,
-                    "id": 1
+                    "id": this.props.route.params.userid
                 })
             })
             await this.setState({add_spending: false})
@@ -391,7 +392,7 @@ class Home extends Component{
     }
 
     async componentDidMount(){
-        let response = await fetch("http://10.0.2.2:5000/get/user/1")
+        let response = await fetch("http://10.0.2.2:5000/get/user/" + this.props.route.params.userid)
         let data = await response.json();
         this.setState({
             name: data.account,

@@ -111,10 +111,10 @@ class Statistic_per_cate extends Component{
             data: [],
             data_income: [],
         })
-        let res = await fetch('http://10.0.2.2:5000/spending/per/cate/' + value.toString());
+        let res = await fetch('http://10.0.2.2:5000/spending/per/cate/' + value.toString() + '/' + this.props.userid);
         let spending_cate = await res.json();
         
-        let res2 = await fetch('http://10.0.2.2:5000/income/per/cate/' + value.toString());
+        let res2 = await fetch('http://10.0.2.2:5000/income/per/cate/' + value.toString() + '/' + this.props.userid);
         let income_cate = await res2.json();
         for (let i = 0; i<income_cate.length; i++){
             income_cate[i]["color"] = this.state.color[i];
@@ -141,13 +141,13 @@ class Statistic_per_cate extends Component{
     }
 
     async componentDidMount(){
-        let res = await fetch('http://10.0.2.2:5000/spending/per/cate/' + this.state.year_selected.toString());
+        let res = await fetch('http://10.0.2.2:5000/spending/per/cate/' + this.state.year_selected.toString() + '/' + this.props.userid);
         let spending_cate = await res.json();
         
-        let res2 = await fetch('http://10.0.2.2:5000/income/per/cate/' + this.state.year_selected.toString());
+        let res2 = await fetch('http://10.0.2.2:5000/income/per/cate/' + this.state.year_selected.toString() + '/' + this.props.userid);
         let income_cate = await res2.json();
 
-        let response = await fetch('http://10.0.2.2:5000/get/year');
+        let response = await fetch('http://10.0.2.2:5000/get/year/' + this.props.userid);
         let year_list = await response.json();
         for (let i = 0; i<income_cate.length; i++){
             income_cate[i]["color"] = this.state.color[i];

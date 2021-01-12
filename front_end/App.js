@@ -18,7 +18,10 @@ export default class App extends Component {
             headerShown: false
         }}
       >
-          <Stack.Screen name = "Login" component={login} />
+          <Stack.Screen name = "Login" component={login} options = {{
+          }}
+          
+          />
           <Stack.Screen name = 'main_screen' component={App_main_screen} />
           <Stack.Screen name = 'Create_account' component={New_Account} />
       </Stack.Navigator>

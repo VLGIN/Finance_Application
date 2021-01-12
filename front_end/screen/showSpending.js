@@ -15,45 +15,6 @@ class ShowSpending extends Component{
         }
     }
 
-    async onRefresh(){
-        this.setState({resfreshing: true});
-        await this.componentDidMount();
-        this.setState({refreshing: false})
-    }
-
-    async delete_hist(value){
-        await Alert.alert(
-            "Confirm",
-            "Are you sure to delete this speding?",
-            [
-                {
-                    text: "Cancel",
-                    onPress: () => {},
-                    style: "cancel"
-                },
-                {
-                    text: "OK",
-                    onPress: async () =>{
-                        await fetch('http://10.0.2.2:5000/delete/spending', {
-                            method: 'post',
-                            mode: 'no-cors',
-                            headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json'
-                            },
-
-                            body: JSON.stringify({
-                            "id": value
-                            })
-                        })
-                        this.componentDidMount();
-                    },
-                }
-            ],
-            {cancelable: false}
-        );
-    }
-
     render(){
         return(
             <Container>
@@ -124,10 +85,50 @@ class ShowSpending extends Component{
         )
     }
 
+
+    async onRefresh(){
+        this.setState({resfreshing: true});
+        await this.componentDidMount();
+        this.setState({refreshing: false})
+    }
+
+    async delete_hist(value){
+        await Alert.alert(
+            "Confirm",
+            "Are you sure to delete this speding?",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => {},
+                    style: "cancel"
+                },
+                {
+                    text: "OK",
+                    onPress: async () =>{
+                        await fetch('http://10.0.2.2:5000/delete/spending', {
+                            method: 'post',
+                            mode: 'no-cors',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+
+                            body: JSON.stringify({
+                            "id": value,
+                            })
+                        })
+                        this.componentDidMount();
+                    },
+                }
+            ],
+            {cancelable: false}
+        );
+    }
+
     async componentDidMount(){
-        let response = await fetch('http://10.0.2.2:5000/spending/type/0');
+        let response = await fetch('http://10.0.2.2:5000/spending/type/0/' + this.props.userid);
         let data = await response.json();
-        let response2 = await fetch('http://10.0.2.2:5000/spending/type/1');
+        let response2 = await fetch('http://10.0.2.2:5000/spending/type/1/' + this.props.userid);
         let data2 = await response2.json();
         this.setState({
             spending_list: data,
