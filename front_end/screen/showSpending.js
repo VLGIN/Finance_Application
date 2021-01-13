@@ -66,19 +66,19 @@ class ShowSpending extends Component{
                                 </Left>
                                 <Body style = {{flexDirection: 'row'}}>
                                     <Left>
-                                        <Text style={{fontSize: 18, fontFamily: 'sans-serif-condensed', fontWeight: 'bold'}}>{item.Date}</Text>
+                                        <Text style={{fontSize: 18, fontFamily: 'sans-serif-condensed', fontWeight: 'bold'}}></Text>
                                     </Left>
                                     <Right>
                                         <Text style={{fontSize: 18, fontFamily: 'sans-serif-condensed', fontWeight: 'bold'}}>{numbro(item.value).format({thousandSeparated: true})}</Text>
                                     </Right>
                                 </Body>
                                 <Right style = {{flex: 0.3}}>
-                                    <Iconicons name = 'trash' value = {item.idspending} size = {20} onPress = {() => this.delete_hist(item.idspending)}/>
+                                    <Iconicons name = 'trash' value = {item.idspending} size = {20} onPress = {() => this.delete_monthly_item(item.categoryid)}/>
                                 </Right>
                             </Body>
                         </CardItem>
                         </Card>)}
-                    keyExtractor = {item => item.idspending.toString()} >
+                    keyExtractor = {item => item.categoryid.toString()} >
                     </FlatList>
                 
             </Container>
@@ -90,6 +90,40 @@ class ShowSpending extends Component{
         this.setState({resfreshing: true});
         await this.componentDidMount();
         this.setState({refreshing: false})
+    }
+
+    async delete_monthly_item(categoryid){
+        await Alert.alert(
+            "Confirm",
+            "Are you sure to delete this speding?",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => {},
+                    style: "cancel"
+                },
+                {
+                    text: "OK",
+                    onPress: async () =>{
+                        await fetch('http://10.0.2.2:5000/delete/monthly', {
+                            method: 'post',
+                            mode: 'no-cors',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+
+                            body: JSON.stringify({
+                            "userid": this.props.userid,
+                            "categoryid": categoryid
+                            })
+                        })
+                        this.componentDidMount();
+                    },
+                }
+            ],
+            {cancelable: false}
+        );
     }
 
     async delete_hist(value){
@@ -126,9 +160,9 @@ class ShowSpending extends Component{
     }
 
     async componentDidMount(){
-        let response = await fetch('http://10.0.2.2:5000/spending/type/0/' + this.props.userid);
+        let response = await fetch('http://10.0.2.2:5000/get/spending/' + this.props.userid);
         let data = await response.json();
-        let response2 = await fetch('http://10.0.2.2:5000/spending/type/1/' + this.props.userid);
+        let response2 = await fetch('http://10.0.2.2:5000/get/monthly/0/' + this.props.userid);
         let data2 = await response2.json();
         this.setState({
             spending_list: data,

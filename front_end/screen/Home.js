@@ -304,6 +304,25 @@ class Home extends Component{
                 })
             })
 
+            if (this.state.income_type_selected == 1){
+                await fetch('http://10.0.2.2:5000/add/monthly', {
+                    method: 'post',
+                    mode: 'no-cors',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+
+                    body: JSON.stringify({
+                        "categoryid": this.state.income_category_selected,
+                        "value": this.state.income_value,
+                        "type": 1,
+                        "userid": this.props.route.params.userid,
+                        "date": moment(this.state.income_date).format("YYYY-MM-DD")
+                    })
+                })
+            }
+
             await this.setState({
                 balance: parseInt(this.state.balance) + parseInt(this.state.income_value),
                 income_value: 0,
@@ -349,6 +368,24 @@ class Home extends Component{
                     "userid": this.props.route.params.userid
                 })
             })
+            if (this.state.spending_type_selected == 1){
+                await fetch('http://10.0.2.2:5000/add/monthly', {
+                    method: 'post',
+                    mode: 'no-cors',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+
+                    body: JSON.stringify({
+                        "categoryid": this.state.spending_category_selected,
+                        "value": this.state.spending_value,
+                        "type": 0,
+                        "userid": this.props.route.params.userid,
+                        "date": moment(this.state.spending_date).format("YYYY-MM-DD")
+                    })
+                })
+            }
             await fetch('http://10.0.2.2:5000/update/limitation',{
                 method: 'post',
                 mode: 'no-cors',

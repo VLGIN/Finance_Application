@@ -74,9 +74,9 @@ router.get('/get/spending/:cate/:userid', async(req, res, next) => {
     }
 })
 
-router.get('/get/spending', async(req, res, next) => {
+router.get('/get/spending/:userid', async(req, res, next) => {
     try{
-        let results = await db.get_spending();
+        let results = await db.get_spending(req.params.userid);
         res.json(results);
     }
     catch(e){
@@ -85,9 +85,9 @@ router.get('/get/spending', async(req, res, next) => {
     }
 })
 
-router.get('/get/income', async(req, res, next) => {
+router.get('/get/income/:userid', async(req, res, next) => {
     try{
-        let results = await db.get_income();
+        let results = await db.get_income(req.params.userid);
         res.json(results);
     }
     catch(e){
@@ -132,6 +132,46 @@ router.post('/post/category', async(req, res, next)=>{
     
 })
 
+router.post('/add/monthly', async(req, res, next) => {
+    try{
+        let categoryid = req.body.categoryid;
+        let value = req.body.value;
+        let type = req.body.type;
+        let userid = req.body.userid;
+        let date = req.body.date;
+        let results = await db.add_monthly(userid, categoryid, value, type, date);
+        res.redirect('/get/category/0');
+    }
+    catch(e){
+        console.log(e);
+        res.sendStatus(500);
+    }
+})
+
+router.post('/delete/monthly', async(req, res, next) => {
+    try{
+        let categoryid = req.body.categoryid;
+        let userid = req.body.userid;
+        let results = await db.delete_monthly(userid, categoryid);
+        res.redirect('/get/category');
+    }
+    catch(e){
+        console.log(e);
+        res.sendStatus(500);
+    }
+})
+
+router.get('/get/monthly/:type/:userid', async(req, res, next)=>{
+    try{
+        let results = await db.get_monthly(req.params.userid, req.params.type);
+        res.json(results);
+    }
+    catch(e){
+        console.log(e);
+        res.sendStatus(500);
+    }
+})
+
 router.post('/post/spending', async(req, res, next) => {
     try{
         let categoryid = req.body.categoryid;
@@ -140,7 +180,7 @@ router.post('/post/spending', async(req, res, next) => {
         let type = req.body.type;
         let userid = req.body.userid;
         await db.add_spending(categoryid, value, date, type, userid);
-        res.redirect('/get/spending');
+        res.redirect('/get/spending/' + userid);
     }
     catch(e){
         console.log(e);
@@ -185,7 +225,7 @@ router.post('/post/income', async(req, res, next) => {
         let type = req.body.type;
         let userid = req.body.userid;
         await db.add_income(categoryid, value, date, type, userid);
-        res.redirect('/get/income');
+        res.redirect('/get/income/' + userid);
     }
     catch(e){
         console.log(e);
@@ -210,7 +250,7 @@ router.post('/delete/spending', async(req, res, next) => {
     try{
         let id = req.body.id;
         await db.delete_spending(id);
-        res.redirect('/get/spending');
+        res.redirect('/get/spending/1');
     }
     catch(e){
         console.log(e);
@@ -234,7 +274,7 @@ router.post('/delete/income', async(req, res, next) => {
     try{
         let id = req.body.id;
         await db.delete_income(id);
-        res.redirect('/get/income');
+        res.redirect('/get/income/1');
     }
     catch(e){
         console.log(e);

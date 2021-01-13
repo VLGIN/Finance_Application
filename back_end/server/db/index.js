@@ -81,9 +81,9 @@ appdb.get_category = (type) => {
     })
 };
 
-appdb.get_spending = () => {
+appdb.get_spending = (userid) => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT spending.value, spending.idspending, spending.type, DATE_FORMAT(spending.date, "%d-%m-%Y") AS Date, category.name FROM spending INNER JOIN category ON spending.categoryid = category.idcategory;', (err, results) => {
+        pool.query('SELECT spending.value, spending.idspending, spending.type, DATE_FORMAT(spending.date, "%d-%m-%Y") AS Date, category.name FROM spending INNER JOIN category ON spending.categoryid = category.idcategory where spending.userid = ?;', [userid], (err, results) => {
             if(err){
                 return reject(err);
             }
@@ -136,9 +136,9 @@ appdb.get_year = (userid) => {
     })
 }
 
-appdb.get_income = () => {
+appdb.get_income = (userid) => {
     return new Promise((resolve, reject) =>{
-        pool.query('SELECT income.value, income.idincome, income.type, DATE_FORMAT(income.date, "%d-%m-%Y") AS Date, category.name FROM income INNER JOIN category ON income.categoryid = category.idcategory ORDER BY Date DESC', (err, results) => {
+        pool.query('SELECT income.value, income.idincome, income.type, DATE_FORMAT(income.date, "%d-%m-%Y") AS Date, category.name FROM income INNER JOIN category ON income.categoryid = category.idcategory where income.userid = ? ORDER BY Date DESC', [userid],(err, results) => {
             if(err){
                 return reject(err);
             }
@@ -182,6 +182,39 @@ appdb.add_spending = (categoryid, value, date, type, userid) => {
 appdb.add_income = (categoryid, value, date, type, userid) => {
     return new Promise((resolve, reject) => {
         pool.query('INSERT INTO income (categoryid, value, date, type, userid) VALUES (?, ?, ?, ?, ?)', [categoryid, value, date, type, userid], (err, results) => {
+            if(err){
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
+appdb.add_monthly = (userid, categoryid, value, type, date) => {
+    return new Promise((resolve, reject) => {
+        pool.query('INSERT INTO monthly_item (userid, categoryid, value, type, date) values (?,?,?,?, ?) ON DUPLICATE KEY UPDATE value = ?, date = ?;', [userid, categoryid, value, type, date, value, date], (err, results)=>{
+            if(err){
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
+appdb.delete_monthly = (userid, categoryid) => {
+    return new Promise((resolve, reject)=> {
+        pool.query('DELETE FROM monthly_item where userid = ? and categoryid = ?;', [userid, categoryid], (err, results)=>{
+            if(err){
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
+appdb.get_monthly = (userid, type)=>{
+    return new Promise((resolve, reject)=>{
+        pool.query('SELECT monthly_item.*, category.name FROM monthly_item  INNER JOIN category ON monthly_item.categoryid = category.idcategory where userid = ? and monthly_item.type = ?;', [userid, type], (err, results)=>{
             if(err){
                 return reject(err);
             }

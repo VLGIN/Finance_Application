@@ -55,7 +55,9 @@ export default class App_main_screen extends Component {
           </View>
         </View>
         <DrawerItemList {...props} />
-        <DrawerItem label="Logout" style = {{fontWeight: 'bold'}} onPress={() => this.props.navigation.navigate("Login")} />
+        <DrawerItem 
+        icon={({ focused, color, size }) => <Icon name = "sign-out-alt" size = {20} color = "#23596e"></Icon>}
+        label="Logout"  onPress={() => this.props.navigation.navigate("Login")} />
       </DrawerContentScrollView>
     )
   }}> 
