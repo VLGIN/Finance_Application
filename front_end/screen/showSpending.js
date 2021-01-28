@@ -19,7 +19,7 @@ class ShowSpending extends Component{
         return(
             <Container>
                 <View>
-                    <Text style = {{color:'#23596e', padding: 4, fontSize: 22, fontFamily: 'sans-serif-condensed', fontWeight: 'bold'}}>Daily</Text>
+                    <Text style = {{color:'#23596e', padding: 4, fontSize: 22, fontFamily: 'sans-serif-condensed', fontWeight: 'bold'}}>History</Text>
                 </View>
                 
                     <FlatList
