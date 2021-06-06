@@ -1,5 +1,6 @@
 # Finance_Application.
 This project is result of my course in school.
+![Image of VLGIN](https://github.com/VLGIN/Finance_Application/blob/main/report_image/Screenshot_1610522501.png)
 
 # This is my very first project on mobile engineering.
 I use react native as frontend technology and expressjs for backend.
