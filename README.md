@@ -1,4 +1,4 @@
-# Financial-Management-App
+# Finance_Application.
 This project is result of my course in school.
 
 # This is my very first project on mobile engineering.
