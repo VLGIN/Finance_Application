@@ -1,7 +1,8 @@
 # Financial-Management-App
 This project is result of my course in school.
 
-# This is my very first project on mobile engineering. I use react native as frontend technology and expressjs for backend.
+# This is my very first project on mobile engineering.
+I use react native as frontend technology and expressjs for backend.
 
 This app is about managing personal finance. It has some commom features such as:
 1. Managing incomes and outcomes.
